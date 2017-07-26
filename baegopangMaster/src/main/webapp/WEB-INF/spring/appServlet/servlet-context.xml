@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+	<!-- DB설정 -->
+	<beans:bean id="ds" class="org.apache.commons.dbcp2.BasicDataSource">
+		<beans:property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<beans:property name="url"
+			value="jdbc:oracle:thin:@psh-oracle.csnsvkq0ah8f.ap-northeast-2.rds.amazonaws.com:1521:orcl" />
+		<beans:property name="username" value="babysean" />
+		<beans:property name="password" value="12341234" />
+	</beans:bean>
+
+	<!-- XML -->
+	<beans:bean id="ssf" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref="ds"/>
+		<beans:property name="configLocation" value="/WEB-INF/Config.xml"/>
+	</beans:bean>
+
+	<!-- DAO -->
+	<beans:bean id="adminDao" class="sist.spring.dao.AdminDao" scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+
+	<!-- SCAN -->
+	<context:component-scan base-package="sist.com.web" />
+	<context:component-scan base-package="sist.spring.dao" />
+
+
+</beans:beans>
