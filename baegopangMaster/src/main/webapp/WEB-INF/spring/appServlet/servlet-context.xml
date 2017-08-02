@@ -18,7 +18,8 @@
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->
-	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
@@ -34,12 +35,49 @@
 
 	<!-- XML -->
 	<beans:bean id="ssf" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<beans:property name="dataSource" ref="ds"/>
-		<beans:property name="configLocation" value="/WEB-INF/Config.xml"/>
+		<beans:property name="dataSource" ref="ds" />
+		<beans:property name="configLocation" value="/WEB-INF/Config.xml" />
 	</beans:bean>
 
 	<!-- DAO -->
-	<beans:bean id="adminDao" class="sist.spring.dao.AdminDao" scope="singleton">
+	<beans:bean id="adminDao" class="sist.spring.dao.AdminDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="dataDao" class="sist.spring.dao.DataDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="masterAskDao" class="sist.spring.dao.MasterAskDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="masterReplyDao" class="sist.spring.dao.MasterReplyDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="memberDao" class="sist.spring.dao.MemberDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="menuManageDao" class="sist.spring.dao.MenuManageDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="noticeDao" class="sist.spring.dao.NoticeDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="orderDao" class="sist.spring.dao.OrderDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="pointDao" class="sist.spring.dao.PointDao"
+		scope="singleton">
+		<beans:property name="sqlSessionFactory" ref="ssf" />
+	</beans:bean>
+	<beans:bean id="zipCodeDao" class="sist.spring.dao.ZipCodeDao"
+		scope="singleton">
 		<beans:property name="sqlSessionFactory" ref="ssf" />
 	</beans:bean>
 

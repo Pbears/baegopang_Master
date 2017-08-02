@@ -8,6 +8,7 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import sist.spring.bean.AdminBean;
 
 public class AdminDao extends SqlSessionDaoSupport{
+	
 	private SqlSessionFactoryBean sqlSessionFactory;
 	
 	public List<AdminBean> selectAllAdmin(){

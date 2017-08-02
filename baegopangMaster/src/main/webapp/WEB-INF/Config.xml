@@ -5,8 +5,38 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 <configuration><!-- DB설정(Connection) -->
 	<typeAliases>
 		<typeAlias type="sist.spring.bean.AdminBean" alias="admin"/>
+		<typeAlias type="sist.spring.bean.OrderBean" alias="order"/> 
+    	 <typeAlias type="sist.spring.bean.ZipcodeBean" alias="zipcode"/>
+    	 <typeAlias type="sist.spring.bean.MasterBean" alias="master"/> 
+    	 <typeAlias type="sist.spring.bean.StoreBean" alias="store"/> 
+   		 <typeAlias type="sist.spring.bean.MenuBean" alias="menu"/>
+    	 <typeAlias type="sist.spring.bean.MasteraskadminBean" alias="ask"/>
+    	 <typeAlias type="sist.spring.bean.MenuByStoreBean" alias="mbs"/>
+    	  <typeAlias type="sist.spring.bean.NoticeBean" alias="notice"/>
+    	  <typeAlias type="sist.spring.bean.MasterReplyBean" alias="reply"/>
+    	  <typeAlias type="sist.spring.bean.OrderDataBean" alias="orderdata"/>
+    	    <typeAlias type="sist.spring.bean.MasterReplyBean" alias="reply"/>
+			<typeAlias type="sist.spring.bean.PointBean" alias="point"/>
+			<typeAlias type="sist.spring.bean.GenderDataBean" alias="genderdata"/>
+			<typeAlias type="sist.spring.bean.WeekDayDataBean" alias="daydata"/>
+			<typeAlias type="sist.spring.bean.AgeDataBean" alias="agedata"/>
+			<typeAlias type="sist.spring.bean.BrandDataBean" alias="branddata"/>
+			<typeAlias type="sist.spring.bean.DaySalesDataBean" alias="daysales"/>
+			<typeAlias type="sist.spring.bean.WeekdaySalesDataBean" alias="weekdaysales"/>
+			<typeAlias type="sist.spring.bean.MonthSalesDataBean" alias="monthsales"/>
+		
 	</typeAliases>
 	<mappers>
 		<mapper resource="sist/spring/dao/admin.xml" />
+		<mapper resource="sist/spring/dao/order.xml" />
+		<mapper resource="sist/spring/dao/member.xml" />
+		<mapper resource="sist/spring/dao/zipcode.xml" />
+		<mapper resource="sist/spring/dao/menuManage.xml" />
+		<mapper resource="sist/spring/dao/Masteraskadmin.xml" />
+		<mapper resource="sist/spring/dao/Notice.xml" />
+		<mapper resource="sist/spring/dao/MasterReply.xml" />
+		<mapper resource="sist/spring/dao/Point.xml" />
+		<mapper resource="sist/spring/dao/data.xml" />
+		
 	</mappers>
 </configuration>
