@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mgopang.xml.order">
+	<select id="getTotalRow" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+
+		SELECT COUNT(*) FROM FOODORDER
+		WHERE STORENAME=#{storename}
+		AND
+		(STATE='승인대기' OR STATE='승인완료')
+		<if test="Q!=null">
+			AND ${Q} LIKE '%'||#{D}||'%'
+		</if>
+		
+
+	</select>
+
+	<select id="getTotalRowCom" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+
+		SELECT COUNT(*) FROM FOODORDER
+		WHERE STORENAME=#{storename}
+		AND
+		STATE='배달완료'
+		<if test="Q2!=null">
+			AND ${Q2} LIKE '%'||#{D2}||'%'
+		</if>
+		
+
+	</select>
+
+	<select id="selectOrderCom" resultType="order" parameterType="java.util.HashMap">
+
+		SELECT ORDERNUMBER, MEMBERID, MEMBERNAME, MEMBERTEL, MEMBERADDRESS,
+		PRICE, ORDERINFO,
+		MENUNAME, AMOUNT, STORENAME,
+		STOREADDRESS, STORETEL,
+		ORDERTIME, STATE
+		FROM(SELECT ORDERNUMBER, MEMBERID, MEMBERNAME, MEMBERTEL, MEMBERADDRESS,
+		PRICE,
+		NVL(ORDERINFO,'없음') ORDERINFO,
+		MENUNAME, AMOUNT, STORENAME,
+		STOREADDRESS, STORETEL,
+		TO_DATE(ORDERTIME,'YYYYMMDD
+		HH24:MI:SS')ORDERTIME, STATE,ROW_NUMBER()OVER(ORDER BY ORDERTIME
+		DESC,ORDERNUMBER ASC)RANK
+		FROM FOODORDER
+		WHERE STORENAME=#{storename}
+		AND STATE='배달완료'
+		<if test="query2!=null">
+			AND ${query2} LIKE '%'||#{data2}||'%'
+		</if>
+		ORDER BY ORDERTIME DESC, ORDERNUMBER ASC)
+		WHERE RANK BETWEEN #{start2} AND #{end2}
+
+
+
+
+	</select>
+
+
+
+	<select id="selectOrder" resultType="order" parameterType="java.util.HashMap">
+
+
+
+		SELECT ORDERNUMBER, MEMBERID, MEMBERNAME, MEMBERTEL, MEMBERADDRESS,
+		PRICE, ORDERINFO,
+		MENUNAME, AMOUNT, STORENAME,
+		STOREADDRESS, STORETEL,
+		ORDERTIME, STATE
+		FROM(SELECT ORDERNUMBER, MEMBERID, MEMBERNAME, MEMBERTEL, MEMBERADDRESS,
+		PRICE,
+		NVL(ORDERINFO,'없음') ORDERINFO,
+		MENUNAME, AMOUNT, STORENAME,
+		STOREADDRESS, STORETEL,
+		TO_DATE(ORDERTIME,'YYYYMMDD
+		HH24:MI:SS')ORDERTIME, STATE,ROW_NUMBER()OVER(ORDER BY ORDERTIME
+		DESC,ORDERNUMBER ASC)RANK
+		FROM FOODORDER
+		WHERE STORENAME=#{storename}
+		AND (STATE='승인대기' OR STATE='승인완료')
+		<if test="query!=null">
+			AND ${query} LIKE '%'||#{data}||'%'
+		</if>
+		ORDER BY ORDERTIME DESC, ORDERNUMBER ASC)
+		WHERE RANK BETWEEN #{start} AND #{end}
+
+
+
+
+	</select>
+
+	<update id="updateOrder" parameterType="java.util.HashMap">
+		UPDATE FOODORDER SET
+		STATE=#{state} WHERE ORDERNUMBER=#{ordernumber}
+
+
+	</update>
+
+	<select id="selectMaster" resultType="master" parameterType="java.util.HashMap">
+
+		SELECT ID, PW, NAME, ADDRESS, TEL, BIRTH, STORENAME FROM MASTER
+		WHERE
+		STORENAME=#{storename}
+
+
+	</select>
+
+	<select id="selectStore" resultType="store" parameterType="java.util.HashMap">
+		SELECT STORENAME, LOCATION, GPA, HOURS, TEL, MINPRICE, INFO,
+		PICTURE,BRANDNO
+		FROM STORE S, (SELECT PICTURE FROM BRAND WHERE
+		BRANDNO=(SELECT BRANDNO
+		FROM STORE WHERE STORENAME=#{storename})) B
+		WHERE S.STORENAME=#{storename}
+
+
+
+	</select>
+
+
+
+	<update id="updateStore" parameterType="store">
+
+		UPDATE STORE SET
+		TEL=#{tel},HOURS=#{hours},INFO=#{info} WHERE
+		STORENAME=#{storename}
+
+	</update>
+
+	<update id="updateMaster" parameterType="java.util.HashMap">
+
+		UPDATE MASTER SET
+		PW=#{pw},TEL=#{tel} ,ADDRESS=#{address} WHERE
+		STORENAME=#{storename}
+
+	</update>
+
+
+
+
+
+	<insert id="dropMaster" parameterType="java.util.HashMap">
+		INSERT INTO
+		REQUESTDROP(ID,PW,NAME,ADDRESS,TEL,BIRTH,STORENAME)
+		VALUES(#{id},#{pw},#{name},#{address},#{tel},#{birth},#{storename})
+	</insert>
+	
+	<update id="updateMemberPang" parameterType="java.util.HashMap">
+		UPDATE MEMBER SET
+		PANG = ((SELECT PANG FROM MEMBER WHERE ID=#{memberid})+#{price}*0.1) WHERE
+		ID=#{memberid} 
+	</update>
+
+
+
+
+
+</mapper>
