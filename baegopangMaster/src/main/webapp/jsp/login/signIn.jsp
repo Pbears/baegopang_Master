@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="/BaegopangMaster/css/bootstrap.css" />
+<link rel="stylesheet" href="css/bootstrap.css" />
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/jquery-1.12.4.js"></script>
@@ -59,11 +59,11 @@
 </script>
 </head>
 <body>
-	<form action="/BaegopangMaster/jsp/login/signInProcess.jsp" method="post" name="log">
+	<form action="/web/login.do" method="post" name="log">
 		<div class="layer">
 			<div id="innerDiv">
 				<div class="content" style="float: left;">
-					<img src="/BaegopangMaster/img/beagopangMasterTitle.png">
+					<img src="img/beagopangMasterTitle.png">
 				</div>
 				<div class="inputLog inputError">
 					<div class="form-group" style="vertical-align: middle;">
@@ -84,7 +84,7 @@
 						<input type="button" class="form-control" id="sendBtn" value="로그인">
 					</div>
 					<div class="form-group" style="vertical-align: middle;">
-						<a href="/BaegopangMaster/jsp/login/signUp.jsp">음식점을 운영하고 싶으시죠 ?</a>
+						<a href="/web/jsp/login/signUp.jsp">음식점을 운영하고 싶으시죠 ?</a>
 					</div>
 				</div>
 			</div>

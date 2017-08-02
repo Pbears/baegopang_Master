@@ -16,8 +16,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Insert title here</title>
-<link href="/BaegopangMaster/css/Main.css" rel="stylesheet" />
-<link rel="stylesheet" href="/BaegopangMaster/css/bootstrap.css">
+<link href="css/Main.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/bootstrap.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -53,7 +53,7 @@
 		 */
 		session.setAttribute("storename", storename);
 	%>
-	<jsp:include page="header.jsp"></jsp:include>
+	<jsp:include page="/jsp/header.jsp"></jsp:include>
 	<div class="col-lg-12" id="mainTopDiv">
 		<div id="myCarousel" class="container carousel col-lg-9"
 			data-ride="carousel">
@@ -68,16 +68,16 @@
 			<div class="carousel-inner">
 
 				<div class="item active">
-					<img src="../img/main_img.jpg" alt="Los Angeles"
+					<img src="img/main_img.jpg" alt="Los Angeles"
 						style="width: 100%;">
 				</div>
 
 				<div class="item">
-					<img src="../img/main_img2.jpg" alt="Chicago" style="width: 100%;">
+					<img src="img/main_img2.jpg" alt="Chicago" style="width: 100%;">
 				</div>
 
 				<div class="item">
-					<img src="../img/main_img3.jpg" alt="New York" style="width: 100%;">
+					<img src="img/main_img3.jpg" alt="New York" style="width: 100%;">
 				</div>
 
 			</div>
@@ -99,7 +99,7 @@
 			</div>
 			<div class="panel-body">
 				<div class="info_user">
-					<img src="../img/noimage.jpg" width="120px" height="120px" />
+					<img src="img/noimage.jpg" width="120px" height="120px" />
 					<div class="myinfo">
 						<p>
 							이름 :

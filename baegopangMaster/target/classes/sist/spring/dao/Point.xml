@@ -2,7 +2,7 @@
 <!DOCTYPE mapper 
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mgopang.xml.Point">
+<mapper namespace="sist.spring.dao.Point">
 	<select id="brandPoint" parameterType="java.lang.String"
 		resultType="point">
 		select r.num,address,point,storename from(

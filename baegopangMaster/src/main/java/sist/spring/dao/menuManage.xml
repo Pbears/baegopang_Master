@@ -2,7 +2,7 @@
 <!DOCTYPE mapper 
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mgopang.xml.menuManage"> 
+<mapper namespace="sist.spring.dao.menuManage"> 
 	<select id="selectMenu" parameterType="java.lang.String" resultType="menu">
   		SELECT m.picture,m.menuname,m.price,m.info FROM
 		( 

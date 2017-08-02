@@ -3,7 +3,6 @@ package sist.spring.dao;
 import java.io.Closeable;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 
@@ -14,7 +13,8 @@ public class MemberDao extends SqlSessionDaoSupport{
 	private SqlSessionFactoryBean sqlSessionFactory;
 
 	public MasterBean memberCheck(String id) {
-		return this.getSqlSession().selectOne("memberCheck", id);
+		System.out.println(id);
+		return this.getSqlSession().selectOne("memberCheck");
 	}
 
 	private void closeSqlSession(Closeable c) {

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper 
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mgopang.xml.zipcode"> 
+<mapper namespace="sist.spring.dao.zipcode"> 
 	<select id="searchAddress" parameterType="java.lang.String" resultType="zipcode">
 		SELECT ZIPCODE, SIDO, GUGUN, DONG, BUNJI, SEQ 
 		FROM ZIPCODE

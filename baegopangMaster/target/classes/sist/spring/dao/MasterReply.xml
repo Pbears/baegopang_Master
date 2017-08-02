@@ -2,7 +2,7 @@
 <!DOCTYPE mapper 
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mgopang.xml.MasterReply"> 
+<mapper namespace="sist.spring.dao.MasterReply"> 
   	<select id="selectReply" parameterType="java.util.Map" resultType="reply">
   		SELECT RM,NO,STORENAME,ORDERNUMBER,ID,
   		CONTENTS,REGDATE,REF,PNUM,REPLY
