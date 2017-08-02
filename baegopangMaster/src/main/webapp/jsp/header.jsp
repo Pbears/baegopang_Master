@@ -1,8 +1,8 @@
 <%@page import="sist.spring.bean.MasterBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<link href="/BaegopangMaster/css/bootstrap.min.css" rel="stylesheet">
-<link href="/BaegopangMaster/css/Main.css" rel="stylesheet" />
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/Main.css" rel="stylesheet" />
 <style>
 html {
 	margin: 10px;
@@ -46,13 +46,11 @@ button#loginBtn.btn btn-default btn-lg {
 }
 </style>
 <header class="col-lg-12">
-	<%
-	MasterBean master = (MasterBean)session.getAttribute("master");
-	%>
+	
 	<div id="headerContainer">
 		<div id="mainTitle" align="center">
-			<a href="main.jsp"> <img
-				src="/BaegopangMaster/img/beagopangTitle.png">
+			<a href="jsp/main.jsp"> <img
+				src="img/beagopangTitle.png">
 			</a>
 		</div>
 		<div id="searchContainer">
@@ -107,7 +105,7 @@ button#loginBtn.btn btn-default btn-lg {
 					</td>
 				</tr>
 					<div id="tab_user" style="display: inline-block; float: right; margin-top: 30px; color: white; font-weight: bold;">
-					<%=master.getId() %> 님 환영합니다</div>
+					${master.id} 님 환영합니다</div>
 			</table>
 		</div>
 	</div>
