@@ -16,14 +16,7 @@ import sist.spring.bean.StoreBean;
 public class OrderDao extends SqlSessionDaoSupport{
 	private SqlSessionFactoryBean sqlSessionFactory;
 
-	private void closeSqlSession(Closeable c) {
-		try {
-			if (c != null)
-				c.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	public int getTotalRow(HashMap<String, Object> map) throws Exception {
 		SqlSession sqlSession = null;
@@ -46,9 +39,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public int getTotalRowCom(HashMap<String, Object> map) throws Exception {
@@ -73,9 +64,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public List<OrderBean> selectOrder(HashMap<String, Object> map) {
@@ -104,9 +93,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public List<OrderBean> selectOrderCom(HashMap<String, Object> map) {
@@ -131,9 +118,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public void updateOrder(HashMap<String, Object> map) {
@@ -158,9 +143,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public StoreBean selectStore(HashMap<String, Object> map) {
@@ -171,9 +154,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public void updateStore(HashMap<String, Object> map) {
@@ -184,9 +165,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			session.rollback();
 			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		} 
 	}
 
 	public void updateMaster(HashMap<String, Object> map) {
@@ -197,8 +176,6 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			session.rollback();
 			e.printStackTrace();
-		} finally {
-			session.close();
 		}
 	}
 
@@ -210,8 +187,6 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			session.rollback();
 			e.printStackTrace();
-		} finally {
-			session.close();
 		}
 	}
 
@@ -223,8 +198,6 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			session.rollback();
 			e.printStackTrace();
-		} finally {
-			session.close();
 		}
 	}
 

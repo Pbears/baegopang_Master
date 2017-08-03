@@ -49,6 +49,7 @@ public class BaegopangController {
 		}
 
 	}
+	
 
 	@RequestMapping(value = "order.do")
 	public String order(Model model, @RequestParam(value = "query", required = false) String query,
@@ -62,10 +63,11 @@ public class BaegopangController {
 		List<OrderBean> list = null;
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		MasterBean storename = (MasterBean) session.getAttribute("master");
+		
+		//MasterBean storename = (MasterBean) session.getAttribute("master");
 
-		map.put("storename", storename.getStorename());
-		// map.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
+		//map.put("storename", storename.getStorename());
+		 map.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
 
 		int pageScale = 10;
 		map.put("Q", query);
@@ -102,21 +104,24 @@ public class BaegopangController {
 
 		// masterorder2
 
+				
 		List<OrderBean> list2 = null;
-		OrderDao dao = new OrderDao();
-		HashMap<String, Object> map2 = new HashMap<String, Object>();
 
-		map2.put("storename", storename.getStorename());
+		HashMap<String, Object> map2 = new HashMap<String, Object>();
+		
+
+		//map2.put("storename", storename.getStorename());
+		 map2.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
 
 		int pageScale2 = 10;
 		map2.put("Q2", query2);
 		map2.put("D2", data2);
 		int currentPage2 = 0;
-		int totalRow2 = dao.getTotalRowCom(map2);
+		int totalRow2 = order.getTotalRowCom(map);
 		try {
 			currentPage2 = page2;
 		} catch (Exception e) {
-			currentPage = 1;
+			currentPage2 = 1;
 		}
 		int totalPage2 = totalRow2 % pageScale2 == 0 ? totalRow2 / pageScale2 : totalRow2 / pageScale2 + 1;
 		if (totalRow2 == 0)
@@ -124,8 +129,7 @@ public class BaegopangController {
 		int start2 = 1 + (currentPage2 - 1) * pageScale2;
 		int end2 = pageScale2 + (currentPage2 - 1) * pageScale2;
 		// out.print(query+" "+data ); //Ãâ·ÂÈ®ÀÎ
-		int currentBlock2 = currentPage2 % pageScale2 == 0 ? (currentPage2 / pageScale2)
-				: (currentPage2 / pageScale2 + 1);
+		int currentBlock2 = currentPage2 % pageScale2 == 0 ? (currentPage2 / pageScale2) : (currentPage2 / pageScale2 + 1);
 		int startPage2 = 1 + (currentBlock2 - 1) * pageScale2;
 		int endPage2 = pageScale2 + (currentBlock2 - 1) * pageScale2;
 		// out.println(startPage+" "+endPage+ " "+currentBlock+" "+totalPage);
@@ -137,12 +141,16 @@ public class BaegopangController {
 		if (query2 != null && data2 != null) {
 			map2.put("query2", query2);
 			map2.put("data2", data2);
-
-			list2 = dao.selectOrderCom(map2);
-
+			list2 = order.selectOrderCom(map2);
 		} else {
-			list2 = dao.selectOrderCom(map2);
-		}
+			list2 = order.selectOrderCom(map2);
+		}		
+		
+		
+		
+		
+		
+		
 
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
@@ -161,7 +169,7 @@ public class BaegopangController {
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalPage2", totalPage2);
 
-		return "jsp/login/maaterOrder";
+		return "jsp/masterOrder";
 	}
 
 }

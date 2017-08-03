@@ -6,6 +6,8 @@
 <%@page import="java.util.HashMap"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -33,7 +35,7 @@
 </script>
 </head>
 <body style="background-color: white;">
-	<%
+	<%-- <%
 		request.setCharacterEncoding("UTF-8");
 		List<OrderBean> list2 = null;
 		String query2 = request.getParameter("query2");
@@ -79,7 +81,10 @@
 		} else {
 			list2 = dao.selectOrderCom(map2);
 		}
-	%>
+	%> --%>
+
+	${currentBlock2} ${startPage2}
+	${currentPage2}
 
 
 
@@ -157,75 +162,68 @@
 
 						<!-- 한블럭 -->
 
-						<%
-							for (int i = 0; i < list2.size(); i++) {
-								OrderBean bean = list2.get(i);
-						%>
+						<c:forEach var="i" items="${list2}" varStatus="cnt">
 
-						<tr>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse2<%=i%>"><%=bean.getOrdernumber()%></a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse2<%=i%>"><%=bean.getOrdertime()%></a></td>
+							<tr>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse2<%=i%>"><%=bean.getMembername()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse2${cnt.count}">${i.ordernumber}</a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse2<%=i%>"><%=bean.getMembertel()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse2${cnt.count}">${i.ordertime}</a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse2<%=i%>"><%=bean.getMemberaddress()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse2${cnt.count}">${i.membername}</a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse2<%=i%>"><%=bean.getOrderinfo()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse2${cnt.count}">${i.membertel}</a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse2<%=i%>"><%=bean.getState()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse2${cnt.count}">${i.memberaddress}</a></td>
 
-							<%
-								if (bean.getState().equals("승인대기")) {
-							%>
-							<td align="center"><a
-								href="/BaegopangMaster/jsp/update/orderUpdate.jsp?state=<%=bean.getState()%>&ordernumber=<%=bean.getOrdernumber()%>"
-								class="btn btn-primary btn-success"><span
-									class="glyphicon glyphicon-ok"></span> 승인</a> <a href="#"
-								class="btn btn-primary btn-danger"><span
-									class="glyphicon glyphicon-remove"></span> 거절</a></td>
-							<%
-								} else if (bean.getState().equals("승인완료")) {
-							%>
-							<td align="center"><a
-								href="/BaegopangMaster/jsp/update/orderUpdate.jsp?state=<%=bean.getState()%>&ordernumber=<%=bean.getOrdernumber()%>"
-								class="btn btn-block btn-primary"><span
-									class="glyphicon glyphicon-ok"></span> 발송</a> <%
- 	} else if (bean.getState().equals("배달완료")) {
- %>
-							<td>&nbsp;</td>
-							<%
-								}
-							%>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse2${cnt.count}">${i.orderinfo}</a></td>
 
-						</tr>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse2${cnt.count}">${i.state}</a></td>
 
-						<tr>
-							<td colspan="7">
-								<div id="collapse2<%=i%>" class="panel-collapse collapse">
-									<ul class="list-group">
-										<li class="list-group-item" style="background-color: #f1f0ef">메뉴
-											: <%=bean.getMenuname()%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											수량 : <%=bean.getAmount()%></li>
-									</ul>
-								</div>
-							</td>
-							<td></td>
-						</tr>
 
-						<%
+								
+
+							</tr>
+
+							<tr>
+								<td colspan="8">
+									<div id="collapse2${cnt.count}" class="panel-collapse collapse">
+										<ul class="list-group">
+											<li class="list-group-item" style="background-color: #f1f0ef">메뉴
+												: ${i.menuname}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 수량 :
+												${i.amount}</li>
+										</ul>
+									</div>
+								</td>
+								<td>
+									<form
+										action="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=del&ordernumber=${i.ordernumber}"
+										method="post" id="orderfrm${cnt.count}"
+										name="orderfrm${cnt.count}">
+										<input type="hidden" name="amount" value="${i.amount}">
+										<input type="hidden" name="price" value="${i.price}">
+										<input type="hidden" name="menuname" value="${i.menuname}">
+										<input type="hidden" name="storename" value="${i.storename}">
+										<input type="hidden" name="ordertime" value="${i.ordertime}">
+										<input type="hidden" name="memberid" value="${i.memberid}">
+									</form>
+								</td>
+							</tr>
+
+							<%-- <%
 							}
-						%>
+						%> --%>
+						</c:forEach>
+						<!--for문 끝  -->
 
 					</tbody>
 				</table>
@@ -236,76 +234,82 @@
 				<div class="paging" style="text-align: center;">
 					<ul class="pagination">
 						<ul class="pager">
-							<li><a href="/BaegopangMaster/jsp/masterOrder.jsp?page2=1"
+							<li><a href="/web/order.do?page2=1"
 								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 							</a></li>
 							<li>
-							<li>
-								<%
-									if (currentBlock > 1) {
-										if (currentPage != startPage) {
-								%> <a
-								href="/BaegopangMaster/jsp/masterOrder.jsp?page2=<%=startPage - 1%>&query2=<%=query2%>&data2=<%=data2%>">
-									Previous </a> <%
- 	} else {
- %> <a href="#">Previous</a> <%
- 	}
- 	} else {
- 		if (currentPage != startPage) {
- %> <a
-								href="/BaegopangMaster/jsp/masterOrder.jsp?page2=<%=currentPage - 1%>&query2=<%=query2%>&data2=<%=data2%>">
-									Previous </a> <%
- 	} else {
- %> <a href="#">Previous</a> <%
- 	}
- 	}
- %>
-							</li>
-							<span> <%
- 	if (data2 != null) {
- 		data2 = URLEncoder.encode(request.getParameter("data2"), "UTF-8");
- 	}
+							<li><c:choose>
+									<c:when test="${currentBlock2>1}">
+										<c:choose>
+											<c:when test="${currentPage2 != startPage2}">
+												<a
+													href="/web/order.do?page2=${startPage2 - 1}&query2=${query2 }&data2=${data2 }">
+													Previous </a>
+											</c:when>
+											<c:otherwise>
+												<a href="#">Previous</a>
+											</c:otherwise>
+										</c:choose>
+									</c:when>
+									<c:otherwise>
+										<c:choose>
+											<c:when test="${currentPage2 != startPage2}">
+												<a
+													href="/web/order.do?page2=${currentPage2 - 1}&query2=${query2 }&data2=${data2 }">
+													Previous </a>
+											</c:when>
+											<c:otherwise>
 
- 	for (int i = startPage; i <= endPage; i++) {
- 		if (i == currentPage) {
- %>
-								<li><a href="#"><strong><%=i%></strong></a></li> <%
- 	} else {
- %>
-								<li><a
-									href="/BaegopangMaster/jsp/masterOrder.jsp?page2=<%=i%>&query2=<%=query2%>&data2=<%=data2%>">
-										<%=i%>
-								</a></li> <%
- 	}
- 	}
- %>
+												<a href="#">Previous</a>
+											</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+								</c:choose></li>
+							<span> <c:forEach var="i" begin="${startPage2}"
+									end="${endPage2}" step="1">
+									<c:choose>
+										<c:when test="${i==currentPage2}">
+
+											<li><a href="#"><strong>${i}</strong></a></li>
+										</c:when>
+										<c:otherwise>
+											<li><a
+												href="/web/order.do?page2=${i}&query2=${query2}&data2=${data2}">
+													${i} </a></li>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
 							</span>
-							<li>
-								<%
-									if (totalPage > endPage) {
-										if (currentPage != endPage) {
-								%> <a
-								href="/BaegopangMaster/jsp/masterOrder.jsp?page2=<%=currentPage + 1%>&query2=<%=query2%>&data2=<%=data2%>">
-									Next </a> <%
- 	} else {
- %> <a href="#">Next</a> <%
- 	}
- 	} else {
- 		if (currentPage != endPage) {
- %> <a
-								href="/BaegopangMaster/jsp/masterOrder.jsp?page2=<%=currentPage + 1%>&query2=<%=query2%>&data2=<%=data2%>">
-									Next </a> <%
- 	} else {
- %> <a href="#">Next</a> <%
- 	}
- 	}
- %>
-							</li>
+							<li><c:choose>
+									<c:when test="${totalPage2 > endPage2}">
+										<c:choose>
+											<c:when test="${currentPage2 != endPage2}">
 
-
+												<a
+													href="/web/order2.do?page2=${currentPage2 + 1}&query2=${query2}&data2=${data2}">
+													Next </a>
+											</c:when>
+											<c:otherwise>
+												<a href="#">Next</a>
+											</c:otherwise>
+										</c:choose>
+									</c:when>
+									<c:otherwise>
+										<c:choose>
+											<c:when test="${currentPage2 != endPage2}">
+												<a
+													href="/web/order.do?page2=${currentPage2 + 1}&query2=${query2}&data2=${data2}">
+													Next </a>
+											</c:when>
+											<c:otherwise>
+												<a href="#">Next</a>
+											</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+								</c:choose></li>
 
 							<li><a
-								href="/BaegopangMaster/jsp/masterOrder.jsp?page2=<%=totalPage%>&query=<%=query2%>&data=<%=data2%>"
+								href="/web/order.do?page2=${totalPage2}&query2=${query2}&data2=${data2}"
 								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 							</a></li>
 						</ul>
