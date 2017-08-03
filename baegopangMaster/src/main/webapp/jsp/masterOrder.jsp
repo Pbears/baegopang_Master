@@ -18,7 +18,7 @@
 	font-size: 13px;
 	padding: initial;
 }
-</style>  
+</style>
 <script>
 	function sendCheck() {
 		var obj = document.ast; //form까지의 주소
@@ -32,15 +32,13 @@
 			obj.submit();
 		}
 	}
-	
+
 	function update(index) {
-		 var obj=document.getElementById("orderfrm"+index);
-		 
+		var obj = document.getElementById("orderfrm" + index);
+
 		obj.submit();
-		
+
 	}
-	
-	
 </script>
 </head>
 <body style="background-color: white;">
@@ -51,8 +49,7 @@
 		String data = request.getParameter("data");
 		OrderDao dao = new OrderDao();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		MasterBean storename=(MasterBean)request.getSession().getAttribute("master");
-		
+		MasterBean storename = (MasterBean) request.getSession().getAttribute("master");
 
 		map.put("storename", storename.getStorename());
 		//map.put("storename", "굽네치킨-역삼1동점");
@@ -91,7 +88,7 @@
 		}
 	%>
 
-	 <jsp:include page="header.jsp" /> 
+	<jsp:include page="header.jsp" />
 
 
 
@@ -174,8 +171,8 @@
 								OrderBean bean = list.get(i);
 								//out.println(bean);
 						%>
-						
-					
+
+
 
 						<tr>
 
@@ -213,8 +210,7 @@
 							<%
 								} else if (bean.getState().equals("승인완료")) {
 							%>
-							<td align="center"><a
-								href="javascript:update(<%=i %>)"
+							<td align="center"><a href="javascript:update(<%=i%>)"
 								class="btn btn-block btn-primary"><span
 									class="glyphicon glyphicon-ok"></span> 발송</a> <%
  	} else if (bean.getState().equals("배달완료")) {
@@ -237,15 +233,20 @@
 								</div>
 							</td>
 							<td>
-							<form action="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=del&ordernumber=<%=bean.getOrdernumber()%>" method="post" id="orderfrm<%=i%>" name="orderfrm<%=i%>">
-							<input type="hidden" name="amount" value="<%=bean.getAmount()%>">
-							<input type="hidden" name="price" value="<%=bean.getPrice()%>">
-							<input type="hidden" name="menuname" value="<%=bean.getMenuname()%>">
-							<input type="hidden" name="storename" value="<%=bean.getStorename()%>">
-							<input type="hidden" name="ordertime" value="<%=bean.getOrdertime()%>">							
-							<input type="hidden" name="memberid" value="<%=bean.getMemberid()%>">							
-							</form></td>
-						</tr>										
+								<form
+									action="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=del&ordernumber=<%=bean.getOrdernumber()%>"
+									method="post" id="orderfrm<%=i%>" name="orderfrm<%=i%>">
+									<input type="hidden" name="amount"
+										value="<%=bean.getAmount()%>"> <input type="hidden"
+										name="price" value="<%=bean.getPrice()%>"> <input
+										type="hidden" name="menuname" value="<%=bean.getMenuname()%>">
+									<input type="hidden" name="storename"
+										value="<%=bean.getStorename()%>"> <input type="hidden"
+										name="ordertime" value="<%=bean.getOrdertime()%>"> <input
+										type="hidden" name="memberid" value="<%=bean.getMemberid()%>">
+								</form>
+							</td>
+						</tr>
 
 						<%
 							}
@@ -344,7 +345,7 @@
 	</div>
 
 
-	 <jsp:include page="masterOrder2.jsp"></jsp:include> 
+	<jsp:include page="masterOrder2.jsp"></jsp:include>
 
 
 
@@ -353,7 +354,7 @@
 
 
 
-	 <jsp:include page="footer.jsp"></jsp:include> 
+	<jsp:include page="footer.jsp"></jsp:include>
 </body>
 <script src="//code.jquery.com/jquery.min.js"></script>
 <script
