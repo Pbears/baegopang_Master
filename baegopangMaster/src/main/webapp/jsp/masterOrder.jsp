@@ -6,6 +6,8 @@
 <%@page import="java.util.HashMap"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -42,7 +44,7 @@
 </script>
 </head>
 <body style="background-color: white;">
-	<%
+	<%-- <%
 		request.setCharacterEncoding("UTF-8");
 		List<OrderBean> list = null;
 		String query = request.getParameter("query");
@@ -86,7 +88,7 @@
 		} else {
 			list = dao.selectOrder(map);
 		}
-	%>
+	%> --%>
 
 	<jsp:include page="header.jsp" />
 
@@ -166,91 +168,96 @@
 
 						<!-- 한블럭 -->
 
-						<%
+						<%-- <%
 							for (int i = 0; i < list.size(); i++) {
 								OrderBean bean = list.get(i);
 								//out.println(bean);
-						%>
+						%> --%>
+
+						<c:forEach var="i" items="${list}" varStatus="cnt">
 
 
 
-						<tr>
+							<tr>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse<%=i%>"><%=bean.getOrdernumber()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse<%=i%>"><%=bean.getOrdernumber()%></a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse<%=i%>"><%=bean.getOrdertime()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse<%=i%>"><%=bean.getOrdertime()%></a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse<%=i%>"><%=bean.getMembername()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse<%=i%>"><%=bean.getMembername()%></a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse<%=i%>"><%=bean.getMembertel()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse<%=i%>"><%=bean.getMembertel()%></a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse<%=i%>"><%=bean.getMemberaddress()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse<%=i%>"><%=bean.getMemberaddress()%></a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse<%=i%>"><%=bean.getOrderinfo()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse<%=i%>"><%=bean.getOrderinfo()%></a></td>
 
-							<td><a class="panel-title" data-toggle="collapse"
-								href="#collapse<%=i%>"><%=bean.getState()%></a></td>
+								<td><a class="panel-title" data-toggle="collapse"
+									href="#collapse<%=i%>"><%=bean.getState()%></a></td>
 
-							<%
-								if (bean.getState().equals("승인대기")) {
-							%>
-							<td align="center"><a
-								href="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=check&ordernumber=<%=bean.getOrdernumber()%>"
-								class="btn btn-primary btn-success"><span
-									class="glyphicon glyphicon-ok"></span> 승인</a> <a
-								href="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=refuse&ordernumber=<%=bean.getOrdernumber()%>"
-								class="btn btn-primary btn-danger"><span
-									class="glyphicon glyphicon-remove"></span> 거절</a></td>
-							<%
-								} else if (bean.getState().equals("승인완료")) {
-							%>
-							<td align="center"><a href="javascript:update(<%=i%>)"
-								class="btn btn-block btn-primary"><span
-									class="glyphicon glyphicon-ok"></span> 발송</a> <%
+								<%
+									if (bean.getState().equals("승인대기")) {
+								%>
+								<td align="center"><a
+									href="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=check&ordernumber=<%=bean.getOrdernumber()%>"
+									class="btn btn-primary btn-success"><span
+										class="glyphicon glyphicon-ok"></span> 승인</a> <a
+									href="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=refuse&ordernumber=<%=bean.getOrdernumber()%>"
+									class="btn btn-primary btn-danger"><span
+										class="glyphicon glyphicon-remove"></span> 거절</a></td>
+								<%
+									} else if (bean.getState().equals("승인완료")) {
+								%>
+								<td align="center"><a href="javascript:update(<%=i%>)"
+									class="btn btn-block btn-primary"><span
+										class="glyphicon glyphicon-ok"></span> 발송</a> <%
  	} else if (bean.getState().equals("배달완료")) {
  %>
-							<td>&nbsp;</td>
-							<%
-								}
-							%>
+								<td>&nbsp;</td>
+								<%
+									}
+								%>
 
-						</tr>
+							</tr>
 
-						<tr>
-							<td colspan="8">
-								<div id="collapse<%=i%>" class="panel-collapse collapse">
-									<ul class="list-group">
-										<li class="list-group-item" style="background-color: #f1f0ef">메뉴
-											: <%=bean.getMenuname()%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											수량 : <%=bean.getAmount()%></li>
-									</ul>
-								</div>
-							</td>
-							<td>
-								<form
-									action="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=del&ordernumber=<%=bean.getOrdernumber()%>"
-									method="post" id="orderfrm<%=i%>" name="orderfrm<%=i%>">
-									<input type="hidden" name="amount"
-										value="<%=bean.getAmount()%>"> <input type="hidden"
-										name="price" value="<%=bean.getPrice()%>"> <input
-										type="hidden" name="menuname" value="<%=bean.getMenuname()%>">
-									<input type="hidden" name="storename"
-										value="<%=bean.getStorename()%>"> <input type="hidden"
-										name="ordertime" value="<%=bean.getOrdertime()%>"> <input
-										type="hidden" name="memberid" value="<%=bean.getMemberid()%>">
-								</form>
-							</td>
-						</tr>
+							<tr>
+								<td colspan="8">
+									<div id="collapse<%=i%>" class="panel-collapse collapse">
+										<ul class="list-group">
+											<li class="list-group-item" style="background-color: #f1f0ef">메뉴
+												: <%=bean.getMenuname()%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												수량 : <%=bean.getAmount()%></li>
+										</ul>
+									</div>
+								</td>
+								<td>
+									<form
+										action="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=del&ordernumber=<%=bean.getOrdernumber()%>"
+										method="post" id="orderfrm<%=i%>" name="orderfrm<%=i%>">
+										<input type="hidden" name="amount"
+											value="<%=bean.getAmount()%>"> <input type="hidden"
+											name="price" value="<%=bean.getPrice()%>"> <input
+											type="hidden" name="menuname" value="<%=bean.getMenuname()%>">
+										<input type="hidden" name="storename"
+											value="<%=bean.getStorename()%>"> <input
+											type="hidden" name="ordertime"
+											value="<%=bean.getOrdertime()%>"> <input
+											type="hidden" name="memberid" value="<%=bean.getMemberid()%>">
+									</form>
+								</td>
+							</tr>
 
-						<%
+							<%-- <%
 							}
-						%>
+						%> --%>
+						</c:forEach>
+						<!--fot문 끝  -->
 
 					</tbody>
 				</table>
@@ -345,7 +352,7 @@
 	</div>
 
 
-	<jsp:include page="masterOrder2.jsp"></jsp:include>
+	<%-- <jsp:include page="masterOrder2.jsp"></jsp:include> --%>
 
 
 
