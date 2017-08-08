@@ -14,15 +14,6 @@ import sist.spring.bean.MasteraskadminBean;
 public class MasterAskDao extends SqlSessionDaoSupport{
 	private SqlSessionFactoryBean sqlSessionFactory;
 
-	private void closeSqlSession(Closeable c) {
-		try {
-			if (c != null)
-				c.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void insertAsk(MasteraskadminBean bean) {
 		SqlSession sqlSession = this.getSqlSession();
 		try {
@@ -32,8 +23,6 @@ public class MasterAskDao extends SqlSessionDaoSupport{
 			// TODO: handle exception
 			e.printStackTrace();
 			sqlSession.rollback();
-		} finally {
-			sqlSession.close();
 		}
 	}
 
@@ -45,10 +34,7 @@ public class MasterAskDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
-
+		} 
 	}
 
 	public List<MasteraskadminBean> selectAsk(HashMap<String, Object> map) {
@@ -59,8 +45,6 @@ public class MasterAskDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
 		}
 	}
 
@@ -72,9 +56,6 @@ public class MasterAskDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
-
+		} 
 	}
 }

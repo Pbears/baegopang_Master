@@ -21,15 +21,6 @@ public class DataDao extends SqlSessionDaoSupport{
 	
 	private SqlSessionFactoryBean sqlSessionFactory;
 
-	private void closeSqlSession(Closeable c) {
-		try {
-			if (c != null)
-				c.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void insertOrderData(HashMap<String, Object> map) {
 		SqlSession session = this.getSqlSession();
 		try {
@@ -38,9 +29,7 @@ public class DataDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			session.rollback();
 			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		} 
 	}
 
 	public List<GenderDataBean> selectGenderData(HashMap<String, Object> map) {
@@ -51,8 +40,6 @@ public class DataDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
 		}
 	}
 
@@ -64,8 +51,6 @@ public class DataDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
 		}
 	}
 
@@ -78,9 +63,7 @@ public class DataDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public List<BrandDataBean> selectBrandData(HashMap<String, Object> map) {
@@ -91,9 +74,7 @@ public class DataDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public List<DaySalesDataBean> selectDaySalesData(HashMap<String, Object> map) {
@@ -104,9 +85,7 @@ public class DataDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public List<WeekdaySalesDataBean> selectWeekDaySalesData(HashMap<String, Object> map) {
@@ -117,9 +96,7 @@ public class DataDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public List<MonthSalesDataBean> selectMonthSalesData(HashMap<String, Object> map) {
@@ -130,9 +107,7 @@ public class DataDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 }

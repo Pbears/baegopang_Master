@@ -17,14 +17,6 @@ public class MemberDao extends SqlSessionDaoSupport{
 		return this.getSqlSession().selectOne("memberCheck");
 	}
 
-	private void closeSqlSession(Closeable c) {
-		try {
-			if (c != null)
-				c.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void masterInsert(MasterBean bean) {
 		SqlSession session = this.getSqlSession();
@@ -34,7 +26,6 @@ public class MemberDao extends SqlSessionDaoSupport{
 			e.printStackTrace();
 		} finally {
 			session.commit();
-			session.close();
 		}
 	}
 
@@ -46,9 +37,7 @@ public class MemberDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 
 	}
 

@@ -41,6 +41,7 @@
 </script>
 </head>
 <body>
+
 	<%-- <%
 		String id = (String) session.getAttribute("id");
 		MemberDao dao = new MemberDao();
@@ -54,7 +55,7 @@
 		session.setAttribute("storename", storename);
 	%> --%>
 	<jsp:include page="header.jsp"></jsp:include>
-	<%-- <div class="col-lg-12" id="mainTopDiv">
+	 <div class="col-lg-12" id="mainTopDiv">
 		<div id="myCarousel" class="container carousel col-lg-9"
 			data-ride="carousel">
 			<!-- Indicators -->
@@ -68,16 +69,16 @@
 			<div class="carousel-inner">
 
 				<div class="item active">
-					<img src="../img/main_img.jpg" alt="Los Angeles"
+					<img src="img/main_img.jpg" alt="Los Angeles"
 						style="width: 100%;">
 				</div>
 
 				<div class="item">
-					<img src="../img/main_img2.jpg" alt="Chicago" style="width: 100%;">
+					<img src="img/main_img2.jpg" alt="Chicago" style="width: 100%;">
 				</div>
 
 				<div class="item">
-					<img src="../img/main_img3.jpg" alt="New York" style="width: 100%;">
+					<img src="img/main_img3.jpg" alt="New York" style="width: 100%;">
 				</div>
 
 			</div>
@@ -99,17 +100,17 @@
 			</div>
 			<div class="panel-body">
 				<div class="info_user">
-					<img src="../img/noimage.jpg" width="120px" height="120px" />
+					<img src="img/noimage.jpg" width="120px" height="120px" />
 					<div class="myinfo">
 						<p>
 							이름 :
-							<%=bean.getName()%></p>
+							${master.name }</p>
 						<p>
 							지점 :
-							<%=bean.getStorename()%></p>
+							${master.storename }</p>
 						<p>
 							포인트 :
-							<%=bean.getPoint()%>팡</p>
+							${master.point }팡</p>
 					</div>
 				</div>
 			</div>
@@ -125,22 +126,24 @@
 			<div class="panel-body">
 				<div id="notice">
 					<div id="notice_list">
-						<ui> <%
+					<c:forEach var="i" items="${notice}" varStatus="cnt">
+						<ui><%--  <%
 							 	List<NoticeBean> list = null;
 							 	list = ndao.noticeSel();
 							 	for (int i = 0; i < list.size(); i++) {
 							 		NoticeBean nbean = list.get(i);
-							 %> <a id="noticeAll"
-							onclick="window.open('Notice.jsp?title=<%=nbean.getTitle()%>',target='_blank','width=300', 'height=200')">
+							 %> --%> 
+							<a id="noticeAll" onclick="window.open('notice.do?title=${i.title}',
+							target='_blank','width=300', 'height=200')">
 							<li style="font-size: 18px; margin-bottom: 15px; color: black;"
-							id="li<%=i%>" onclick="noticeView(<%=i%>)"
-							value="<%=nbean.getTitle()%>"><%=nbean.getTitle()%></li>
-							</a> <%
-						 	}
-						 %> </ui>
+							id="li${cnt.count}" onclick="noticeView(${cnt.count})"
+							value="${i.title }">${i.title }</li>
+							</a>
+						 </ui>
+					</c:forEach> 
 					</div>
 					<a href="#"
-						onclick="window.open('NoticeList.jsp','_blank','width=400', 'height=500')"
+						onclick="window.open('noticeList.do','_blank','width=400', 'height=500')"
 						style="padding: 0px;" class="noti_title">
 						<p
 							style="display: inline-block; font-size: 15px; color: #646464; margin-top: 15px;">더보기</p>
@@ -148,12 +151,12 @@
 				</div>
 			</div>
 		</div>
-		<%
+		<%-- <%
 			PointDao bdao= new PointDao();
 			PointDao gdao= new PointDao();
 			PointBean bbean = bdao.mybrandPoint(storename);
 			
-		%>
+		%> --%>
 		<div class="panel panel-default col-lg-4">
 			<div class="panel-heading">
 				<h3 class="panel-title"  style="font-weight: bold;">내가게 순위</h3>
@@ -162,19 +165,19 @@
 				<div id="brand_rank"
 					style="display: inline-block; float: left; padding: 0 40px; margin:0 30px; text-align: center;">
 					<h4 style="font-weight: bold;">브랜드 별</h4>
-					<img src="/BaegopangMaster/img/noimg.jpg" width="80px"
+					<img src="img/noimg.jpg" width="80px"
 						height="80px" style="border-radius: 50px;">
-					<h2><%=bbean.getNum() %>등</h2>
+					<h2>${brandp.num }등</h2>
 				</div>
-				<%
+				<%-- <%
 				PointBean gbean = gdao.myguPoint(storename);
-				%>
+				%> --%>
 				<div id="gu_rank"
 					style="display: inline-block; float: left; padding: 0 40px; text-align: center; margin:0 30px;">
 					<h4 style="font-weight: bold;">구 별</h4>
-					<img src="/BaegopangMaster/img/noimg.jpg" width="80px"
+					<img src="img/noimg.jpg" width="80px"
 						height="80px" style="border-radius: 50px;">
-						<h2><%=gbean.getNum() %>등</h2>
+						<h2>${gup.num }등</h2>
 				</div>
 			</div>
 		</div>
@@ -189,7 +192,7 @@
 				<h5 onclick="questionPage()" style="margin-top: 20px;">문의 하러 가기</h5>
 			</div>
 		</div>
-	</div> --%>
+	</div> 
 
 	<jsp:include page="footer.jsp"></jsp:include>
 </body>

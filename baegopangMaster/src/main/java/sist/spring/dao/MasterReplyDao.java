@@ -51,14 +51,6 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 
 	private SqlSessionFactoryBean sqlSessionFactory;
 
-	private void closeSqlSession(Closeable c) {
-		try {
-			if (c != null)
-				c.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public List<MasterReplyBean> selectReply(HashMap<String, Object> map) {
 		SqlSession sqlSession = null;
@@ -68,9 +60,7 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public int getRTotalRows(String storename) throws Exception {
@@ -81,8 +71,6 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
-		} finally {
-			closeSqlSession(sqlSession);
 		}
 	}
 
@@ -94,9 +82,7 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			/* e.printStackTrace(); */
 			return -1;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public void updateReply(HashMap<String, Object> map) throws Exception {
@@ -108,9 +94,7 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 			// TODO: handle exception
 			e.printStackTrace();
 			sqlSession.rollback();
-		} finally {
-			sqlSession.close();
-		}
+		} 
 	}
 
 	public void insertReply(HashMap<String, Object> map) throws Exception {
@@ -122,9 +106,7 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 			// TODO: handle exception
 			e.printStackTrace();
 			sqlSession.rollback();
-		} finally {
-			sqlSession.close();
-		}
+		} 
 	}
 
 	public String selectOneRep(HashMap<String, Object> map) throws Exception {
@@ -135,8 +117,6 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 			// TODO: handle exception
 			e.printStackTrace();
 			return null;
-		} finally {
-			sqlSession.close();
 		}
 	}
 
@@ -149,9 +129,7 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 			// TODO: handle exception
 			e.printStackTrace();
 			sqlSession.rollback();
-		} finally {
-			sqlSession.close();
-		}
+		} 
 	}
 
 }

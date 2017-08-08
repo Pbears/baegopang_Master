@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import sist.spring.bean.MasterBean;
+import sist.spring.bean.NoticeBean;
 import sist.spring.bean.OrderBean;
+import sist.spring.bean.PointBean;
 import sist.spring.dao.AdminDao;
 import sist.spring.dao.MemberDao;
+import sist.spring.dao.NoticeDao;
 import sist.spring.dao.OrderDao;
+import sist.spring.dao.PointDao;
 
 @Controller
 @SessionAttributes("master")
@@ -27,6 +31,10 @@ public class BaegopangController {
 	private MemberDao member;
 	@Resource(name = "orderDao")
 	private OrderDao order;
+	@Resource(name = "noticeDao")
+	private NoticeDao notice;
+	@Resource(name = "pointDao")
+	private PointDao point;
 
 	@RequestMapping(value = "index.do")
 	public String signIn() {
@@ -42,15 +50,83 @@ public class BaegopangController {
 		MasterBean bean = member.memberCheck(userId);
 		if (userPw.equals(bean.getPw())) {
 			model.addAttribute("master", bean);
-			return "/jsp/main";
+			return "redirect:main.do";
 		} else {
 			model.addAttribute("check", "fail");
 			return "jsp/login/signIn";
 		}
 
 	}
+	@RequestMapping(value="main.do")
+	public String main(Model model,HttpSession session) {
+	/*	
+		String id = (String) session.getAttribute("id");
+		MemberDao dao = new MemberDao();
+		MasterBean bean = (MasterBean) session.getAttribute("master");
+		String storename = bean.getStorename();
+		NoticeDao ndao = new NoticeDao();
+		 session에 넣지말고 
+		 * (MasterBean)session.getAttribute("master") 안에 정보 다 넣어뒀으니까 
+		 * 여기서 뽑아서 쓰세용 ~ 확인하시면 이 주석 삭제부탁드립니다.
+		 
+		session.setAttribute("storename", storename);*/
+		MasterBean master=(MasterBean)session.getAttribute("master");
+		List<NoticeBean>list = notice.noticeSel();
+		PointBean brandp = point.mybrandPoint(master.getStorename());
+		PointBean gup = point.myguPoint(master.getStorename());
+		model.addAttribute("notice", list);
+		model.addAttribute("brandp", brandp);
+		model.addAttribute("gup", gup);
+		return "jsp/main";
+	}
 	
-
+	@RequestMapping(value="notice.do")
+	public String notice(Model model,@RequestParam(value="title")String title) {
+		NoticeBean bean = notice.selNoticeOne(title);
+		model.addAttribute("noticesel", bean);
+		return "jsp/Notice";
+	}
+	@RequestMapping(value="noticeList")
+	public String noticeAll(Model model,@RequestParam(value = "page", required = false) Integer page)throws Exception {
+		
+		List<NoticeBean>list = notice.noticeSel();
+		
+		model.addAttribute("notice", list);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		int pageScale = 10;
+		int currentPage = 0;
+		int totalRow = notice.getNTotalRows();
+		try {
+			currentPage = page;
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		int totalPage = totalRow % pageScale == 0 ? totalRow / pageScale : totalRow / pageScale + 1;
+		if (totalRow == 0)
+			totalPage = 1;
+		int start = 1 + (currentPage - 1) * pageScale;
+		int end = pageScale + (currentPage - 1) * pageScale;
+		//out.print(query+"   "+data ); //출력확인
+		int currentBlock = currentPage % pageScale == 0 ? (currentPage / pageScale) : (currentPage / pageScale + 1);
+		int startPage = 1 + (currentBlock - 1) * pageScale;
+		int endPage = pageScale + (currentBlock - 1) * pageScale;
+		//   out.println(startPage+" "+endPage+ " "+currentBlock+" "+totalPage);
+		if (totalPage <= endPage)
+			endPage = totalPage;
+		map.put("start", start);
+		map.put("end", end);
+		
+		model.addAttribute("currentBlock", currentBlock);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("totalPage", totalPage);
+		
+		
+		return "jsp/NoticeList";
+	}
+	
 	@RequestMapping(value = "order.do")
 	public String order(Model model, @RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "data", required = false) String data,

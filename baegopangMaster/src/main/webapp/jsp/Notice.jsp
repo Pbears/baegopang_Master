@@ -8,17 +8,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>Insert title here</title>
-<link href="../css/Notice.css" rel="stylesheet">
+<link href="css/Notice.css" rel="stylesheet">
 </head>
 <body>
-	<%
+	<%--  <%
 		request.setCharacterEncoding("euc-kr");
 		String title = request.getParameter("title");
 		System.out.print(title);
 		NoticeDao dao = new NoticeDao();
 		NoticeBean bean;
 		bean = dao.selNoticeOne(title);
-	%>
+	%> --%>
 
 	<!-- UI Object -->
 	<h1>공지사항</h1>
@@ -35,7 +35,7 @@
 		<thead>
 			<tr>
 				<th scope="row">제목</th>
-				<td colspan="5"><%=bean.getTitle()%></td>
+				<td colspan="5">${noticesel.title }</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -43,12 +43,12 @@
 				<th scope="row">작성자</th>
 				<td>Admin</td>
 				<th scope="row">작성일</th>
-				<td><%=bean.getRegdate()%></td>
+				<td>${noticesel.regdate }</td>
 				<th scope="row">조회</th>
 				<td>19</td>
 			</tr>
 			<tr>
-				<td colspan="6" rowspan="6" class="cont" style="padding-bottom: 200px;"><span style="font-size: 20px; line-height: 30px" ><%=bean.getInfo() %>.</span>
+				<td colspan="6" rowspan="6" class="cont" style="padding-bottom: 200px;"><span style="font-size: 20px; line-height: 30px" >${noticesel.info }.</span>
 				</td>
 			</tr>
 		</tbody>
@@ -57,7 +57,7 @@
 	<form action="NoticeList.jsp">
 		<input type="submit" value="목록보기" style="float: right; margin-top:20px;">
 	</form>
-	</div>
+	</div> 
 	<!-- //UI Object -->
 </body>
 </html>

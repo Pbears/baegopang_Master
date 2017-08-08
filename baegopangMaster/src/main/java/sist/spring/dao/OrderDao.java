@@ -129,9 +129,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			session.rollback();
 			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		} 
 	}
 
 	public MasterBean selectMaster(HashMap<String, Object> map) {

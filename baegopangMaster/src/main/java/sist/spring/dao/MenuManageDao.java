@@ -16,14 +16,6 @@ import sist.spring.bean.MenuBean;
 public class MenuManageDao extends SqlSessionDaoSupport{
 	private SqlSessionFactoryBean sqlSessionFactory;
 
-	private void closeSqlSession(Closeable c) {
-		try {
-			if (c != null)
-				c.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void deleteMenu(String menuname) {
 		SqlSession sqlSession = this.getSqlSession();
@@ -34,9 +26,7 @@ public class MenuManageDao extends SqlSessionDaoSupport{
 			// TODO: handle exception
 			e.printStackTrace();
 			sqlSession.rollback();
-		} finally {
-			sqlSession.close();
-		}
+		} 
 	}
 
 	public List<MenuBean> selectMenu(String id) {
@@ -47,9 +37,7 @@ public class MenuManageDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public List<MenuBean> selectMenuOne(String picture) {
@@ -60,8 +48,6 @@ public class MenuManageDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
 		}
 
 	}
@@ -74,9 +60,7 @@ public class MenuManageDao extends SqlSessionDaoSupport{
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			closeSqlSession(sqlSession);
-		}
+		} 
 	}
 
 	public void insertMenu(HashMap<String, String> map) {
@@ -88,8 +72,6 @@ public class MenuManageDao extends SqlSessionDaoSupport{
 			// TODO: handle exception
 			e.printStackTrace();
 			sqlSession.rollback();
-		} finally {
-			sqlSession.close();
-		}
+		} 
 	}
 }

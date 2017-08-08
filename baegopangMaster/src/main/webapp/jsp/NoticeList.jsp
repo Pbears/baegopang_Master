@@ -4,6 +4,8 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -21,7 +23,7 @@
 	}
 </script>
 <body>
-<%
+<%-- <%
 	NoticeDao dao =new NoticeDao();
 	List<NoticeBean>list = null;
 	
@@ -51,7 +53,7 @@
 	map.put("start", start);
 	map.put("end", end);
 %>
-
+ --%>
 
 <div class="container">
   <h2>공지사항</h2>          
@@ -64,20 +66,19 @@
       </tr>
     </thead>
     <tbody>
-    <%
+<%--     <%
     	list = dao.selectPage(map);
     	for(int i=0; i<list.size(); i++){
     		NoticeBean bean = list.get(i);
-    %>
+    %> --%>
+    <c:forEach var="i" items="${notice }" varStatus="cnt">
       <tr tabindex="1">
-        <td><%=bean.getNo() %></td>
-        <td><%=bean.getRegdate() %></td>
-        <td id="ntitle<%=i%>" onclick="NoticeOne(<%=i%>)"><%=bean.getTitle() %></td>
+        <td>${i.no }</td>
+        <td>${i.regdate }</td>
+        <td id="ntitle${cnt.count }" onclick="NoticeOne(${cnt.count})">${i.title }</td>
       </tr>
-        <input type="hidden" id="notitle<%=i%>" value="<%=bean.getTitle() %>">
-	<%
-    	}
-	%>
+        <input type="hidden" id="notitle${cnt.count }" value="${i.title }">
+     </c:forEach>
     </tbody>
   </table>
 </div>
@@ -85,74 +86,138 @@
 			<div class="paging" style="text-align: center;">
 				<ul class="pagination">
 					<ul class="pager">
-						<li><a href="/BaegopangMaster/jsp/NoticeList.jsp?page=1"
+						<li><a href="/web/NoticeList.do?page=1"
 							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 						</a></li>
 						<li>
 						<li>
-							<%
+							<%-- <%
 								if (currentBlock > 1) {
 									if (currentPage != startPage) {
-							%> <a
-							href="/BaegopangMaster/jsp/NoticeList.jsp?page=<%=startPage - 1%>">
+							%> --%>
+							<c:choose>
+								<c:when test="${currentBlock > 1 }">
+									<c:choose>
+										<c:when test="${currentPage != startPage }">
+							 <a
+							href="/web/NoticeList.do?page=${startPage - 1 }">
 								Previous </a> 
-								<%
+								<%-- <%
 								 	} else {
-								 %> <a href="#">Previous</a> <%
+								 %>  --%>
+								 </c:when>
+								 <c:otherwise>
+									 <a href="#">Previous</a> 
+								 </c:otherwise>
+								</c:choose> 
+								 <%-- <%
 								 	}
 								 	} else {
 								 		if (currentPage != startPage) {
-								 %> <a
-							href="/BaegopangMaster/jsp/NoticeList.jsp?page=<%=currentPage - 1%>">
-								Previous </a> <%
+								 %> --%> 
+								 </c:when>
+								
+								 <c:otherwise>
+								  <c:choose>
+								 <c:when test="${currentPage != startPage }">
+								 <a
+							href="/web/NoticeList.do?page=${currentPage - 1 }">
+								Previous </a> <%-- <%
  	} else {
- %> <a href="#">Previous</a> <%
+ %>  --%>
+ 	</c:when>
+ 	<c:otherwise>
+ 	<a href="#">Previous</a> <%-- <%
  	}
  	}
- %>
+ %> --%>
+ </c:otherwise>
+ </c:choose>
+ </c:otherwise>
+ </c:choose>
 						</li>
-						<span> <%
+						<span>
+<%--  <%
 
 
  	for (int i = startPage; i <= endPage; i++) {
  		if (i == currentPage) {
- %>
-							<li><a href="#"><strong><%=i%></strong></a></li> <%
+ %>  --%>
+	<c:forEach var="i" begin="${startPage}" end="${endPage }"> 
+		<c:choose>
+			<c:when test="${i == currentPage }">
+
+		<li><a href="#"><strong>${i }</strong></a></li> 
+<%-- <%
  	} else {
- %>
+ %> --%>
+</c:when>
+<c:otherwise>
+
 							<li><a
-								href="/BaegopangMaster/jsp/NoticeList.jsp?page=<%=i%>">
-									<%=i%>
-							</a></li> <%
- 	}
+								href="/web/NoticeList.do?page=${i }">
+									${i }
+							</a></li> 
+<%-- <%
+ 		}
  	}
  %>
+ --%> 
+ 	</c:otherwise>	
+ 	</c:choose>
+  </c:forEach>
 						</span>
 						<li>
-							<%
+							<%-- <%
 								if (totalPage > endPage) {
 									if (currentPage != endPage) {
-							%> <a
-							href="/BaegopangMaster/jsp/NoticeList.jsp?page=<%=currentPage + 1%>">
-								Next </a> <%
+							%> --%>
+							<c:choose>
+								<c:when test="${totalPage > endPage }">
+									<c:choose>
+										<c:when test="${currentPage != endPage }">
+							 <a href="/web/NoticeList.do?page=${currentPage + 1 }">
+								Next </a> 
+<%-- <%
  	} else {
- %> <a href="#">Next</a> <%
+ %>  --%>
+  </c:when>
+  <c:otherwise>
+ <a href="#">Next</a>
+ </c:otherwise>
+<%--   <%
  	}
  	} else {
  		if (currentPage != endPage) {
- %> <a
-							href="/BaegopangMaster/jsp/NoticeList.jsp?page=<%=currentPage + 1%>">
-								Next </a> <%
+ %>  --%>
+ </c:choose>
+ </c:when>
+ <c:otherwise>
+	<c:choose>
+		<c:when test="${currentPage != endPage }">
+	
+	
+ <a href="/web/NoticeList.do?page=${currentPage + 1 }">Next </a>
+ </c:when>
+ <c:otherwise> 
+<%-- <%
  	} else {
- %> <a href="#">Next</a> <%
+ %> --%>
+ 	 <a href="#">Next</a>
+ </c:otherwise>
+ </c:choose>
+<%--  <%
  	}
  	}
- %>
+ %> --%>
+ </c:otherwise>
+  </c:choose>
+
 						</li>
 
 						<li><a
-							href="/BaegopangMaster/jsp/NoticeListn.jsp?page=<%=totalPage%>"
-							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							href="/web/NoticeListn.do?page=${totalPage }"
+							aria-label="Next"> <span aria-hidden="true">&raquo;</span> 
 						</a></li>
 					</ul>
 			</div>
