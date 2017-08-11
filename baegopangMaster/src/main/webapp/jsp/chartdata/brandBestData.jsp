@@ -1,4 +1,6 @@
-<%@page import="org.json.simple.JSONObject"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%-- <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@page import="sist.spring.bean.BrandDataBean"%>
 <%@page import="sist.spring.dao.DataDao"%>
@@ -6,8 +8,6 @@
 <%@page import="java.util.HashMap"%>
 <%@ page import="java.util.Set"%>
 <%@ page import="java.util.ArrayList"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.io.PrintWriter"%>
 <%
@@ -67,4 +67,6 @@
 		pw.print(totalArray.toString());
 		pw.flush();
 		pw.close();  
-%>
+%> --%>
+
+${json}

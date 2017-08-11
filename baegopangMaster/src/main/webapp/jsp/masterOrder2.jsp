@@ -83,8 +83,6 @@
 		}
 	%> --%>
 
-	${currentBlock2} ${startPage2}
-	${currentPage2}
 
 
 
@@ -107,7 +105,7 @@
 				<div id="searcher" class="row">
 					<div class="input-group">
 
-						<form action="masterOrder.jsp" name="ast2" method="post">
+						<form action="/web/order.do" name="ast2" method="post">
 							<table class="bbsWrite mgb35" align="center">
 								<colgroup>
 									<col width="30" />
@@ -131,7 +129,7 @@
 												</button>
 										</span></td>
 										<div style="postion: relative; left: 100px;">
-											<td><a href="masterOrder.jsp?page=1"><button
+											<td><a href="/web/order.do?page=1"><button
 														type="button" class="btn btn-default">새로고침</button></a></td>
 											<td>
 										</div>
@@ -206,7 +204,7 @@
 								</td>
 								<td>
 									<form
-										action="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=del&ordernumber=${i.ordernumber}"
+										action="/web/orderupdate.do?flag=del&ordernumber=${i.ordernumber}"
 										method="post" id="orderfrm${cnt.count}"
 										name="orderfrm${cnt.count}">
 										<input type="hidden" name="amount" value="${i.amount}">

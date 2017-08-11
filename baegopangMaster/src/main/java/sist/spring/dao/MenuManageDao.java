@@ -21,11 +21,9 @@ public class MenuManageDao extends SqlSessionDaoSupport{
 		SqlSession sqlSession = this.getSqlSession();
 		try {
 			sqlSession.insert("deleteMenu", menuname);
-			sqlSession.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			sqlSession.rollback();
 		} 
 	}
 
@@ -67,11 +65,9 @@ public class MenuManageDao extends SqlSessionDaoSupport{
 		SqlSession sqlSession = this.getSqlSession();
 		try {
 			sqlSession.insert("insertMenu", map);
-			sqlSession.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			sqlSession.rollback();
 		} 
 	}
 }

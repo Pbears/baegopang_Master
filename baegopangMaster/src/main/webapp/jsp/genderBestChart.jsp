@@ -37,7 +37,7 @@ var types1;
 function generateChartData1() {
 
 	$.ajax({
-			url : "/BaegopangMaster/jsp/chartdata/genderData.jsp",
+			url : "/web/genderData.do",
 			async : false,
 			dataType : "json",
 			success : function(data) {

@@ -92,9 +92,8 @@
 		}
 	%> --%>
 
-	<%-- <jsp:include page="header.jsp" /> --%>
+	 <jsp:include page="header.jsp" />
 
-	${currentBlock} ${startPage} ${currentPage} ${endPage}
 
 
 
@@ -117,7 +116,7 @@
 				<div id="searcher" class="row">
 					<div class="input-group">
 
-						<form action="masterOrder.jsp" name="ast" method="post">
+						<form action="/web/order.do" name="ast" method="post">
 							<table class="bbsWrite mgb35" align="center">
 								<colgroup>
 									<col width="30" />
@@ -141,7 +140,7 @@
 												</button>
 										</span></td>
 										<div style="postion: relative; left: 100px;">
-											<td><a href="masterOrder.jsp?page=1"><button
+											<td><a href="/web/order.do?page=1"><button
 														type="button" class="btn btn-default">새로고침</button></a></td>
 											<td>
 										</div>
@@ -205,10 +204,10 @@
 								<c:choose>
 									<c:when test="${i.state eq '승인대기' }">
 										<td align="center"><a
-											href="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=check&ordernumber=${i.ordernumber}"
+											href="/web/orderupdate.do?flag=check&ordernumber=${i.ordernumber}"
 											class="btn btn-primary btn-success"><span
 												class="glyphicon glyphicon-ok"></span> 승인</a> <a
-											href="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=refuse&ordernumber=${i.ordernumber}"
+											href="/web/orderupdate.do?flag=refuse&ordernumber=${i.ordernumber}"
 											class="btn btn-primary btn-danger"><span
 												class="glyphicon glyphicon-remove"></span> 거절</a></td>
 
@@ -239,7 +238,7 @@
 								</td>
 								<td>
 									<form
-										action="/BaegopangMaster/jsp/update/orderUpdate.jsp?flag=del&ordernumber=${i.ordernumber}"
+										action="/web/orderupdate.do?flag=del&ordernumber=${i.ordernumber}"
 										method="post" id="orderfrm${cnt.count}"
 										name="orderfrm${cnt.count}">
 										<input type="hidden" name="amount" value="${i.amount}">

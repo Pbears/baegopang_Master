@@ -89,11 +89,9 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 		SqlSession sqlSession = this.getSqlSession();
 		try {
 			sqlSession.update("updateReply", map);
-			sqlSession.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			sqlSession.rollback();
 		} 
 	}
 
@@ -101,11 +99,9 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 		SqlSession sqlSession = this.getSqlSession();
 		try {
 			sqlSession.insert("insertReply", map);
-			sqlSession.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			sqlSession.rollback();
 		} 
 	}
 
@@ -124,11 +120,9 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 		SqlSession sqlSession = this.getSqlSession();
 		try {
 			sqlSession.update("getPoint", id);
-			sqlSession.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			sqlSession.rollback();
 		} 
 	}
 

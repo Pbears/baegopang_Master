@@ -125,9 +125,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		SqlSession session = this.getSqlSession();
 		try {
 			session.update("updateOrder", map);
-			session.commit();
 		} catch (Exception e) {
-			session.rollback();
 			e.printStackTrace();
 		} 
 	}
@@ -159,9 +157,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		SqlSession session = this.getSqlSession();
 		try {
 			session.update("updateStore", map);
-			session.commit();
 		} catch (Exception e) {
-			session.rollback();
 			e.printStackTrace();
 		} 
 	}
@@ -170,9 +166,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		SqlSession session = this.getSqlSession();
 		try {
 			session.update("updateMaster", map);
-			session.commit();
 		} catch (Exception e) {
-			session.rollback();
 			e.printStackTrace();
 		}
 	}
@@ -181,9 +175,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		SqlSession session = this.getSqlSession();
 		try {
 			session.insert("dropMaster", bean);
-			session.commit();
 		} catch (Exception e) {
-			session.rollback();
 			e.printStackTrace();
 		}
 	}
@@ -192,9 +184,7 @@ public class OrderDao extends SqlSessionDaoSupport{
 		SqlSession session = this.getSqlSession();
 		try {
 			session.update("updateMemberPang", map);
-			session.commit();
 		} catch (Exception e) {
-			session.rollback();
 			e.printStackTrace();
 		}
 	}

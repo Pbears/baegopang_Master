@@ -49,7 +49,7 @@ button#loginBtn.btn btn-default btn-lg {
 	
 	<div id="headerContainer">
 		<div id="mainTitle" align="center">
-			<a href="jsp/main.jsp"> <img
+			<a href="/web/main.do"> <img
 				src="img/beagopangTitle.png">
 			</a>
 		</div>
@@ -60,7 +60,7 @@ button#loginBtn.btn btn-default btn-lg {
 						<div class="dropdown1">
 							<button class="dropbtn1">내 음식점</button>
 							<div class="dropdown-content1">
-								<a href="menuManager.jsp">메뉴 관리</a><a href="masterOrder.jsp">주
+								<a href="menuManager.jsp">메뉴 관리</a><a href="/web/order.do">주
 									문</a><a href="ReplyManage.jsp">댓글 관리</a>
 
 	
@@ -73,7 +73,7 @@ button#loginBtn.btn btn-default btn-lg {
 						<div class="dropdown2">
 							<button class="dropbtn2">통 계</button>
 							<div class="dropdown-content2">
-								<a href="salesInfo.jsp">매출 통계</a><a href="bestInfo.jsp">베스트 통계</a>
+								<a href="/web/salesInfo.do">매출 통계</a><a href="/web/bestInfo.do">베스트 통계</a>
 							</div>
 						</div>
 

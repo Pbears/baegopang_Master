@@ -25,9 +25,7 @@ public class DataDao extends SqlSessionDaoSupport{
 		SqlSession session = this.getSqlSession();
 		try {
 			session.insert("insertOrderData", map);
-			session.commit();
 		} catch (Exception e) {
-			session.rollback();
 			e.printStackTrace();
 		} 
 	}

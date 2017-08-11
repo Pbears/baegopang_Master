@@ -32,7 +32,7 @@ var loaddata2;
 
 function getnewdata2(){
 	$.ajax({
-		url : "/BaegopangMaster/jsp/chartdata/weekdaySalesData.jsp",
+		url : "/web/weekdaySalesData.do",
 		async : false,
 		dataType : "json",
 		success : function(data) {

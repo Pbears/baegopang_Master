@@ -33,7 +33,7 @@ var types3;
 
 function generateChartData3() {
 	$.ajax({
-		url : "/BaegopangMaster/jsp/chartdata/weekDayData.jsp",
+		url : "/web/weekDayData.do",
 		async : false,
 		dataType : "json",
 		success : function(data) {

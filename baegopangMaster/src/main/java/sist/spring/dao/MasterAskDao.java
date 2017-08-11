@@ -18,11 +18,9 @@ public class MasterAskDao extends SqlSessionDaoSupport{
 		SqlSession sqlSession = this.getSqlSession();
 		try {
 			sqlSession.insert("insertAsk", bean);
-			sqlSession.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			sqlSession.rollback();
 		}
 	}
 

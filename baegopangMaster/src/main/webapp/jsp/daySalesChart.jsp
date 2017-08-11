@@ -27,7 +27,7 @@ var loaddata;
 
 function getnewdata(){
 	$.ajax({
-		url : "/BaegopangMaster/jsp/chartdata/daySalesData.jsp",
+		url : "/web/daySalesData.do",
 		async : false,
 		dataType : "json",
 		success : function(data) {

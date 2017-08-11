@@ -24,9 +24,7 @@ public class MemberDao extends SqlSessionDaoSupport{
 			session.insert("masterInsert", bean);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			session.commit();
-		}
+		} 
 	}
 
 	public MasterBean selectMasterOne(String id) {

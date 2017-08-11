@@ -31,7 +31,7 @@
 						<div class="col-sm-12">						
 						<div class="col-sm-12" style="margin-bottom: 200px"><jsp:include page="daySalesChart.jsp"></jsp:include></div>
 						<div class="col-sm-12" style="margin-bottom: 200px"><jsp:include page="weekdaySalesChart.jsp"></jsp:include>   </div>	
-						<div class="col-sm-12" style="margin-bottom: 200px"><jsp:include page="monthSalesChart.jsp"></jsp:include>   </div>	
+						<div class="col-sm-12" style="margin-bottom: 200px"><jsp:include page="monthSalesChart.jsp"></jsp:include>   </div>
 						
 						
 						</div>

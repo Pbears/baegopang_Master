@@ -33,7 +33,7 @@ var loaddata;
 
 function getnewdata(){
 	$.ajax({
-		url : "/BaegopangMaster/jsp/chartdata/brandBestData.jsp",
+		url : "/web/brandBestData.do",
 		async : false,
 		dataType : "json",
 		success : function(data) {

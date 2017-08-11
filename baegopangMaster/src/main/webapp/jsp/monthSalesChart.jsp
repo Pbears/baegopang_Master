@@ -34,7 +34,7 @@ var loaddata3;
 
 function getnewdata3(){
 	$.ajax({
-		url : "/BaegopangMaster/jsp/chartdata/monthSalesData.jsp",
+		url : "/web/monthSalesData.do",
 		async : false,
 		dataType : "json",
 		success : function(data) {
