@@ -91,7 +91,7 @@ button#loginBtn.btn btn-default btn-lg {
 						<div class="dropdown4">
 							<button class="dropbtn4">마이페이지</button>
 							<div class="dropdown-content4">
-								<a href="masterInfo.jsp">내정보 보기</a>
+								<a href="/web/masterInfo.do">내정보 보기</a>
 							</div>
 						</div>
 					</td>

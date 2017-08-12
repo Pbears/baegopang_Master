@@ -25,6 +25,7 @@ import sist.spring.bean.MonthSalesDataBean;
 import sist.spring.bean.NoticeBean;
 import sist.spring.bean.OrderBean;
 import sist.spring.bean.PointBean;
+import sist.spring.bean.StoreBean;
 import sist.spring.bean.WeekDayDataBean;
 import sist.spring.bean.WeekdaySalesDataBean;
 import sist.spring.dao.AdminDao;
@@ -47,7 +48,7 @@ public class BaegopangController {
 	private NoticeDao notice;
 	@Resource(name = "pointDao")
 	private PointDao point;
-	@Resource(name="dataDao")
+	@Resource(name = "dataDao")
 	private DataDao data;
 
 	@RequestMapping(value = "index.do")
@@ -154,10 +155,10 @@ public class BaegopangController {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		 MasterBean storename = (MasterBean) session.getAttribute("master");
+		MasterBean storename = (MasterBean) session.getAttribute("master");
 
-		 map.put("storename", storename.getStorename());
-		//map.put("storename", "굽네치킨-역삼1동점");
+		map.put("storename", storename.getStorename());
+		// map.put("storename", "굽네치킨-역삼1동점");
 
 		int pageScale = 10;
 		map.put("Q", query);
@@ -198,8 +199,8 @@ public class BaegopangController {
 
 		HashMap<String, Object> map2 = new HashMap<String, Object>();
 
-		 map2.put("storename", storename.getStorename());
-		//map2.put("storename", "굽네치킨-역삼1동점");
+		map2.put("storename", storename.getStorename());
+		// map2.put("storename", "굽네치킨-역삼1동점");
 
 		int pageScale2 = 10;
 		map2.put("Q2", query2);
@@ -277,7 +278,7 @@ public class BaegopangController {
 			map.put("state", "배달완료");
 			String orderday = ordertime.substring(0, 10);
 			String ordermonth = ordertime.substring(0, 7);
-			map.put("amount",amount);
+			map.put("amount", amount);
 			map.put("price", price);
 			map.put("menuname", menuname);
 			map.put("storename", storename);
@@ -308,143 +309,131 @@ public class BaegopangController {
 
 		return "redirect:order.do";
 	}
-	
-	@RequestMapping(value="genderData.do")
-	public String genderData(Model model,HttpSession session) {
-		
-		
-		 MasterBean master=(MasterBean)session.getAttribute("master");
-			String storename = master.getStorename();
-			//String storename = "굽네치킨-역삼1동점";
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("storename", storename);
-			DataDao dao = data;
-			List<GenderDataBean> list = dao.selectGenderData(map);
-			String man = null;
-			String woman = null;
-			
-			String json = "[";
 
-			for (int i = 0; i < list.size(); i++) {
+	@RequestMapping(value = "genderData.do")
+	public String genderData(Model model, HttpSession session) {
 
-				if (man == null) {
-					if (((GenderDataBean) list.get(i)).getGender().equals("남")) {
-						man = String.valueOf(((GenderDataBean) list.get(i)).getRatiogender());
-			        json +="{" + "\"type\" : \"남자\"," + "\"percent\" : \"" + man + "\","
-					+ "\"color\" : \"#ff9e01\"," + "\"subs\" : " + "[";
-					}
+		MasterBean master = (MasterBean) session.getAttribute("master");
+		String storename = master.getStorename();
+		// String storename = "굽네치킨-역삼1동점";
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("storename", storename);
+		DataDao dao = data;
+		List<GenderDataBean> list = dao.selectGenderData(map);
+		String man = null;
+		String woman = null;
 
-				}
-			}
-			
-					
-			int metc=0;
+		String json = "[";
 
-			for (int i = 0; i < list.size(); i++) {
-				GenderDataBean bean = ((GenderDataBean) list.get(i));
+		for (int i = 0; i < list.size(); i++) {
 
-				if (bean.getGender().equals("남")&&(bean.getRank()==1||bean.getRank()==2||bean.getRank()==3)) {
-					 json+="{" + "\"type\" : \""+bean.getMenuname()+"\"," + "\"percent\" : \""+bean.getRatiomenu()+"\"" + "},";
-				}else if(bean.getGender().equals("남")&& bean.getRank() !=1 && bean.getRank() !=2 &&bean.getRank() != 3){
-					metc+=bean.getRatiomenu();
+			if (man == null) {
+				if (((GenderDataBean) list.get(i)).getGender().equals("남")) {
+					man = String.valueOf(((GenderDataBean) list.get(i)).getRatiogender());
+					json += "{" + "\"type\" : \"남자\"," + "\"percent\" : \"" + man + "\"," + "\"color\" : \"#ff9e01\","
+							+ "\"subs\" : " + "[";
 				}
 
 			}
-			if(metc!=0){
-				
-				json+="{" + "\"type\" : \"기타\"," + "\"percent\" : \""+metc+"\"" + "},";
-			}
-			
-			
-			if(man!=null){
-			json=(new String(json)).substring(0, json.lastIndexOf(","));
-			json+="]" + "},";
-			}
-			
-			
-			for (int i = 0; i < list.size(); i++) {
+		}
 
-				if (woman == null) {
-					if (((GenderDataBean) list.get(i)).getGender().equals("여")) {
-						woman = String.valueOf(((GenderDataBean) list.get(i)).getRatiogender());
-						json +="{" + "\"type\" : \"여자\"," + "\"percent\" : \""+woman+"\"," + "\"color\" : \"#b0de09\","
-								+ "\"subs\" : " + "[";
-					}
+		int metc = 0;
 
+		for (int i = 0; i < list.size(); i++) {
+			GenderDataBean bean = ((GenderDataBean) list.get(i));
+
+			if (bean.getGender().equals("남") && (bean.getRank() == 1 || bean.getRank() == 2 || bean.getRank() == 3)) {
+				json += "{" + "\"type\" : \"" + bean.getMenuname() + "\"," + "\"percent\" : \"" + bean.getRatiomenu()
+						+ "\"" + "},";
+			} else if (bean.getGender().equals("남") && bean.getRank() != 1 && bean.getRank() != 2
+					&& bean.getRank() != 3) {
+				metc += bean.getRatiomenu();
+			}
+
+		}
+		if (metc != 0) {
+
+			json += "{" + "\"type\" : \"기타\"," + "\"percent\" : \"" + metc + "\"" + "},";
+		}
+
+		if (man != null) {
+			json = (new String(json)).substring(0, json.lastIndexOf(","));
+			json += "]" + "},";
+		}
+
+		for (int i = 0; i < list.size(); i++) {
+
+			if (woman == null) {
+				if (((GenderDataBean) list.get(i)).getGender().equals("여")) {
+					woman = String.valueOf(((GenderDataBean) list.get(i)).getRatiogender());
+					json += "{" + "\"type\" : \"여자\"," + "\"percent\" : \"" + woman + "\"," + "\"color\" : \"#b0de09\","
+							+ "\"subs\" : " + "[";
 				}
 
 			}
-			
-			
-			
-			
-					
-			int wetc=0;
 
-			for (int i = 0; i < list.size(); i++) {
-				GenderDataBean bean = ((GenderDataBean) list.get(i));
+		}
 
-				if (bean.getGender().equals("여")&&(bean.getRank()==1||bean.getRank()==2||bean.getRank()==3)) {
-					 json+="{" + "\"type\" : \""+bean.getMenuname()+"\"," + "\"percent\" : \""+bean.getRatiomenu()+"\"" + "},";
-				}else if(bean.getGender().equals("여")&& bean.getRank() !=1 && bean.getRank() !=2 &&bean.getRank() != 3){
-					wetc+=bean.getRatiomenu();
-				}
+		int wetc = 0;
 
+		for (int i = 0; i < list.size(); i++) {
+			GenderDataBean bean = ((GenderDataBean) list.get(i));
+
+			if (bean.getGender().equals("여") && (bean.getRank() == 1 || bean.getRank() == 2 || bean.getRank() == 3)) {
+				json += "{" + "\"type\" : \"" + bean.getMenuname() + "\"," + "\"percent\" : \"" + bean.getRatiomenu()
+						+ "\"" + "},";
+			} else if (bean.getGender().equals("여") && bean.getRank() != 1 && bean.getRank() != 2
+					&& bean.getRank() != 3) {
+				wetc += bean.getRatiomenu();
 			}
-			if(metc!=0){
-				
-				json+="{" + "\"type\" : \"기타\"," + "\"percent\" : \""+wetc+"\"" + "},";
-			}
-			
-			json=(new String(json)).substring(0, json.lastIndexOf(","));
-			
-			if(man!=null && woman!=null){
-				
-				json+="]" + "}";
-				}
-			
-			
-			
-			json+= "]";
-			
-			
 
-			model.addAttribute("json", json); 
-			System.out.println(json);
+		}
+		if (metc != 0) {
 
-			 	/*PrintWriter pw = response.getWriter();
-				pw = response.getWriter();
-				pw.print(json);
-				pw.flush();
-				pw.close(); 
-*/		
+			json += "{" + "\"type\" : \"기타\"," + "\"percent\" : \"" + wetc + "\"" + "},";
+		}
+
+		json = (new String(json)).substring(0, json.lastIndexOf(","));
+
+		if (man != null && woman != null) {
+
+			json += "]" + "}";
+		}
+
+		json += "]";
+
+		model.addAttribute("json", json);
+		System.out.println(json);
+
+		/*
+		 * PrintWriter pw = response.getWriter(); pw = response.getWriter();
+		 * pw.print(json); pw.flush(); pw.close();
+		 */
 		return "jsp/chartdata/genderData";
 	}
-	
-	
-	@RequestMapping(value="bestInfo.do")
+
+	@RequestMapping(value = "bestInfo.do")
 	public String bestInfo() {
-		
+
 		return "jsp/bestInfo";
 	}
-	
-	@RequestMapping(value="ageData.do")
-	public String ageBestChart(Model model,HttpSession session) {
-		
-		MasterBean master=(MasterBean)session.getAttribute("master");
+
+	@RequestMapping(value = "ageData.do")
+	public String ageBestChart(Model model, HttpSession session) {
+
+		MasterBean master = (MasterBean) session.getAttribute("master");
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		//map.put("storename", "굽네치킨-역삼1동점");
-		DataDao dao =data;
+		// map.put("storename", "굽네치킨-역삼1동점");
+		DataDao dao = data;
 		List<AgeDataBean> list = dao.selectAgeData(map);
-		//out.print(list); 
+		// out.print(list);
 
-		 JSONObject[] ageObj2 = { new JSONObject(), new JSONObject(), new JSONObject(), new JSONObject(),
-				new JSONObject()};
+		JSONObject[] ageObj2 = { new JSONObject(), new JSONObject(), new JSONObject(), new JSONObject(),
+				new JSONObject() };
 
-		JSONArray[] subArray2 = { new JSONArray(), new JSONArray(), new JSONArray(), new JSONArray(),
-				new JSONArray()};
+		JSONArray[] subArray2 = { new JSONArray(), new JSONArray(), new JSONArray(), new JSONArray(), new JSONArray() };
 		JSONArray totalArray2 = new JSONArray();
 		String[] ageRatio2 = new String[5];
 		int[] metc2 = new int[5];
@@ -452,31 +441,31 @@ public class BaegopangController {
 		for (int i = 0; i < list.size(); i++) {
 			AgeDataBean bean = list.get(i);
 
-			if (bean.getAge()==10) {
+			if (bean.getAge() == 10) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc2[0] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getAge()==20) {
+			} else if (bean.getAge() == 20) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc2[1] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getAge()==30) {
+			} else if (bean.getAge() == 30) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc2[2] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getAge()==40) {
+			} else if (bean.getAge() == 40) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc2[3] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getAge()==50) {
+			} else if (bean.getAge() == 50) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc2[4] += bean.getRatiomenu();
@@ -484,24 +473,22 @@ public class BaegopangController {
 
 			}
 		}
-		
-		for(int i=0;metc2.length<i;i++){
-		if(metc2[i]!=0){
-			
-			JSONObject subObj = new JSONObject();
-			subObj.put("type", "기타");
-			subObj.put("percent", metc2[i]);
-			subArray2[i].add(subObj);
-			
-		 }
+
+		for (int i = 0; metc2.length < i; i++) {
+			if (metc2[i] != 0) {
+
+				JSONObject subObj = new JSONObject();
+				subObj.put("type", "기타");
+				subObj.put("percent", metc2[i]);
+				subArray2[i].add(subObj);
+
+			}
 		}
-		
-		
 
 		for (int i = 0; i < list.size(); i++) {
 			AgeDataBean bean = list.get(i);
 
-			if (bean.getAge()==10) {
+			if (bean.getAge() == 10) {
 				if (ageRatio2[0] == null) {
 					ageRatio2[0] = String.valueOf(bean.getRatioage());
 					ageObj2[0].put("type", "10대");
@@ -516,9 +503,9 @@ public class BaegopangController {
 					subObj.put("type", bean.getMenuname());
 					subObj.put("percent", bean.getRatiomenu());
 					subArray2[0].add(subObj);
-				} 
+				}
 
-			} else if (bean.getAge()==20) {
+			} else if (bean.getAge() == 20) {
 				if (ageRatio2[1] == null) {
 					ageRatio2[1] = String.valueOf(bean.getRatioage());
 					ageObj2[1].put("type", "20대");
@@ -534,7 +521,7 @@ public class BaegopangController {
 					subObj.put("percent", bean.getRatiomenu());
 					subArray2[1].add(subObj);
 				}
-			} else if (bean.getAge()==30) {
+			} else if (bean.getAge() == 30) {
 				if (ageRatio2[2] == null) {
 					ageRatio2[2] = String.valueOf(bean.getRatioage());
 					ageObj2[2].put("type", "30대");
@@ -551,7 +538,7 @@ public class BaegopangController {
 					subArray2[2].add(subObj);
 				}
 
-			} else if (bean.getAge()==40) {
+			} else if (bean.getAge() == 40) {
 				if (ageRatio2[3] == null) {
 					ageRatio2[3] = String.valueOf(bean.getRatioage());
 					ageObj2[3].put("type", "40대");
@@ -568,7 +555,7 @@ public class BaegopangController {
 					subArray2[3].add(subObj);
 				}
 
-			} else if (bean.getAge()==50) {
+			} else if (bean.getAge() == 50) {
 				if (ageRatio2[4] == null) {
 					ageRatio2[4] = String.valueOf(bean.getRatioage());
 					ageObj2[4].put("type", "50대");
@@ -585,44 +572,39 @@ public class BaegopangController {
 					subArray2[4].add(subObj);
 				}
 
-			} 
+			}
 
 		}
 
-		//현재페이지의 목록데이터
-		
-		model.addAttribute("json",totalArray2);
+		// 현재페이지의 목록데이터
 
-		 	/*PrintWriter pw = response.getWriter();
-			pw.print(totalArray2);
-			pw.flush();
-			pw.close();*/
-		
-		
-		
-		
-		
+		model.addAttribute("json", totalArray2);
+
+		/*
+		 * PrintWriter pw = response.getWriter(); pw.print(totalArray2); pw.flush();
+		 * pw.close();
+		 */
+
 		return "jsp/chartdata/ageData";
 	}
-	
-	@RequestMapping(value="weekDayData.do")
-	public String dayBestChart(Model model,HttpSession session) {
-		
-		
-		MasterBean master=(MasterBean)session.getAttribute("master");
+
+	@RequestMapping(value = "weekDayData.do")
+	public String dayBestChart(Model model, HttpSession session) {
+
+		MasterBean master = (MasterBean) session.getAttribute("master");
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		//map.put("storename", "굽네치킨-역삼1동점");
+		// map.put("storename", "굽네치킨-역삼1동점");
 		DataDao dao = data;
 		List<WeekDayDataBean> list = dao.selectWeekDayData(map);
-		//out.print(list);
+		// out.print(list);
 
 		JSONObject[] dayObj1 = { new JSONObject(), new JSONObject(), new JSONObject(), new JSONObject(),
 				new JSONObject(), new JSONObject(), new JSONObject() };
 
-		JSONArray[] subArray1 = { new JSONArray(), new JSONArray(), new JSONArray(), new JSONArray(),
-				new JSONArray(), new JSONArray(), new JSONArray() };
+		JSONArray[] subArray1 = { new JSONArray(), new JSONArray(), new JSONArray(), new JSONArray(), new JSONArray(),
+				new JSONArray(), new JSONArray() };
 		JSONArray totalArray1 = new JSONArray();
 		String[] dayRatio1 = new String[7];
 		int[] metc1 = new int[7];
@@ -674,17 +656,16 @@ public class BaegopangController {
 
 			}
 		}
-		for(int i=0;metc1.length<i;i++){
-			if(metc1[i]!=0){
-				
+		for (int i = 0; metc1.length < i; i++) {
+			if (metc1[i] != 0) {
+
 				JSONObject subObj = new JSONObject();
 				subObj.put("type", "기타");
 				subObj.put("percent", metc1[i]);
 				subArray1[i].add(subObj);
-				
-			 }
+
 			}
-		
+		}
 
 		for (int i = 0; i < list.size(); i++) {
 			WeekDayDataBean bean = list.get(i);
@@ -772,7 +753,7 @@ public class BaegopangController {
 					subObj.put("type", bean.getMenuname());
 					subObj.put("percent", bean.getRatiomenu());
 					subArray1[4].add(subObj);
-				} 
+				}
 
 			} else if (bean.getWeekday().equals("토")) {
 				if (dayRatio1[5] == null) {
@@ -811,189 +792,176 @@ public class BaegopangController {
 			}
 
 		}
-		
-		model.addAttribute("json",totalArray1);
 
-		//현재페이지의 목록데이터
-/*		out.print(totalArray1);
+		model.addAttribute("json", totalArray1);
 
-		 	PrintWriter pw = response.getWriter();
-			pw.print(totalArray1);
-			pw.flush();
-			pw.close();*/  
-		
-		
+		// 현재페이지의 목록데이터
+		/*
+		 * out.print(totalArray1);
+		 * 
+		 * PrintWriter pw = response.getWriter(); pw.print(totalArray1); pw.flush();
+		 * pw.close();
+		 */
+
 		return "jsp/chartdata/weekDayData";
 	}
-	
-	
-	@RequestMapping(value="brandBestData.do")
-	public String brandBestChart(Model model,HttpSession session) {
-		
-		 MasterBean master=(MasterBean)session.getAttribute("master");
-			String storename = master.getStorename();
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("storename", storename);
-			//map.put("storename", "굽네치킨-역삼1동점");
 
-			DataDao dao = data;
-			List<BrandDataBean> list = dao.selectBrandData(map);
-			//out.print(list);
-			
-			JSONArray totalArray=new JSONArray();
-			
+	@RequestMapping(value = "brandBestData.do")
+	public String brandBestChart(Model model, HttpSession session) {
 
-			
-			int metc = 0;
-
-			for (int i = 0; i < list.size(); i++) {
-				BrandDataBean bean = list.get(i);
-
-				
-
-					if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
-						metc += bean.getRatiomenu();
-					}
-
-				
-			}
-			
-			if(metc!=0){
-				JSONObject obj=new JSONObject();
-				obj.put("country", "기타");
-				obj.put("litres", metc);
-				totalArray.add(obj);
-				
-			}
-
-			for (int i = 0; i < list.size(); i++) {
-				BrandDataBean bean = list.get(i);
-				
-				if (bean.getRank() == 1 || bean.getRank() == 2 || bean.getRank() == 3) {
-					JSONObject obj=new JSONObject();
-					obj.put("country", bean.getMenuname());
-					obj.put("litres", bean.getRatiomenu());
-					totalArray.add(obj);
-				}
-				
-
-			}
-
-			//현재페이지의 목록데이터
-			model.addAttribute("json",totalArray);
-			/*out.print(totalArray.toString());
-
-			 	PrintWriter pw = response.getWriter();
-				pw.print(totalArray.toString());
-				pw.flush();
-				pw.close();  */
-			
-			System.out.println();
-		
-		return "jsp/chartdata/brandBestData";
-	}
-	
-	@RequestMapping(value="salesInfo.do")
-	public String salesInfo() {
-		
-		return "jsp/salesInfo";
-	}
-	
-	
-	@RequestMapping(value="daySalesData.do")
-	public String daySalesChart(Model model,HttpSession session) {
-		
-		
-		 MasterBean master=(MasterBean)session.getAttribute("master");
-			String storename = master.getStorename();
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("storename", storename);
-			//map.put("storename", "굽네치킨-역삼1동점");
-
-			DataDao dao = data;
-			List<DaySalesDataBean> list = dao.selectDaySalesData(map);
-			String[] color={"#FF0F00","#FF9E01","#F8FF01","#04D215","#0D8ECF","#2A0CD0","#8A0CCF"}; 
-			//out.print(list);
-			
-			JSONArray totalArray=new JSONArray();
-			
-
-			for (int i = 0; i < list.size(); i++) {
-				DaySalesDataBean bean = list.get(i);
-				
-				JSONObject jsonObj=new JSONObject();
-				jsonObj.put("date", bean.getOrderday());
-				jsonObj.put("value", bean.getDaysale());
-				//System.out.println(jsonObj.toString());
-				totalArray.add(jsonObj);
-			}
-			
-			model.addAttribute("json",totalArray);
-
-			//현재페이지의 목록데이터
-			//out.print(totalArray.toString());
-
-			 	/*PrintWriter pw = response.getWriter();
-				pw.print(totalArray.toString());
-				pw.flush();
-				pw.close(); */
-		
-		return "jsp/chartdata/daySalesData";
-	}
-	
-	
-	@RequestMapping(value="weekdaySalesData.do")
-	public String weekdaySalesChart(Model model,HttpSession session) {
-		
-	    MasterBean master=(MasterBean)session.getAttribute("master");
+		MasterBean master = (MasterBean) session.getAttribute("master");
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		//map.put("storename", "교동짬뽕-선릉점");
+		// map.put("storename", "굽네치킨-역삼1동점");
+
+		DataDao dao = data;
+		List<BrandDataBean> list = dao.selectBrandData(map);
+		// out.print(list);
+
+		JSONArray totalArray = new JSONArray();
+
+		int metc = 0;
+
+		for (int i = 0; i < list.size(); i++) {
+			BrandDataBean bean = list.get(i);
+
+			if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
+				metc += bean.getRatiomenu();
+			}
+
+		}
+
+		if (metc != 0) {
+			JSONObject obj = new JSONObject();
+			obj.put("country", "기타");
+			obj.put("litres", metc);
+			totalArray.add(obj);
+
+		}
+
+		for (int i = 0; i < list.size(); i++) {
+			BrandDataBean bean = list.get(i);
+
+			if (bean.getRank() == 1 || bean.getRank() == 2 || bean.getRank() == 3) {
+				JSONObject obj = new JSONObject();
+				obj.put("country", bean.getMenuname());
+				obj.put("litres", bean.getRatiomenu());
+				totalArray.add(obj);
+			}
+
+		}
+
+		// 현재페이지의 목록데이터
+		model.addAttribute("json", totalArray);
+		/*
+		 * out.print(totalArray.toString());
+		 * 
+		 * PrintWriter pw = response.getWriter(); pw.print(totalArray.toString());
+		 * pw.flush(); pw.close();
+		 */
+
+		System.out.println();
+
+		return "jsp/chartdata/brandBestData";
+	}
+
+	@RequestMapping(value = "salesInfo.do")
+	public String salesInfo() {
+
+		return "jsp/salesInfo";
+	}
+
+	@RequestMapping(value = "daySalesData.do")
+	public String daySalesChart(Model model, HttpSession session) {
+
+		MasterBean master = (MasterBean) session.getAttribute("master");
+		String storename = master.getStorename();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("storename", storename);
+		// map.put("storename", "굽네치킨-역삼1동점");
+
+		DataDao dao = data;
+		List<DaySalesDataBean> list = dao.selectDaySalesData(map);
+		String[] color = { "#FF0F00", "#FF9E01", "#F8FF01", "#04D215", "#0D8ECF", "#2A0CD0", "#8A0CCF" };
+		// out.print(list);
+
+		JSONArray totalArray = new JSONArray();
+
+		for (int i = 0; i < list.size(); i++) {
+			DaySalesDataBean bean = list.get(i);
+
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("date", bean.getOrderday());
+			jsonObj.put("value", bean.getDaysale());
+			// System.out.println(jsonObj.toString());
+			totalArray.add(jsonObj);
+		}
+
+		model.addAttribute("json", totalArray);
+
+		// 현재페이지의 목록데이터
+		// out.print(totalArray.toString());
+
+		/*
+		 * PrintWriter pw = response.getWriter(); pw.print(totalArray.toString());
+		 * pw.flush(); pw.close();
+		 */
+
+		return "jsp/chartdata/daySalesData";
+	}
+
+	@RequestMapping(value = "weekdaySalesData.do")
+	public String weekdaySalesChart(Model model, HttpSession session) {
+
+		MasterBean master = (MasterBean) session.getAttribute("master");
+		String storename = master.getStorename();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("storename", storename);
+		// map.put("storename", "교동짬뽕-선릉점");
 
 		DataDao dao = data;
 		List<WeekdaySalesDataBean> list = dao.selectWeekDaySalesData(map);
-		//out.print(list);
-		
-		JSONArray totalArray=new JSONArray();
-		String[] color={"#FF0F00","#FF9E01","#F8FF01","#04D215","#0D8ECF","#2A0CD0","#8A0CCF"}; 
-		
+		// out.print(list);
+
+		JSONArray totalArray = new JSONArray();
+		String[] color = { "#FF0F00", "#FF9E01", "#F8FF01", "#04D215", "#0D8ECF", "#2A0CD0", "#8A0CCF" };
 
 		for (int i = 0; i < list.size(); i++) {
 			WeekdaySalesDataBean bean = list.get(i);
-			
-			JSONObject jsonObj=new JSONObject();
-			jsonObj.put("country", bean.getWeekday()+"요일");
+
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("country", bean.getWeekday() + "요일");
 			jsonObj.put("visits", bean.getAvgsales());
-			jsonObj.put("color",color[i]);
+			jsonObj.put("color", color[i]);
 			totalArray.add(jsonObj);
 		}
-		
-		model.addAttribute("json",totalArray);
 
-		//현재페이지의 목록데이터
-		/*out.print(totalArray.toString());
+		model.addAttribute("json", totalArray);
 
-		 	PrintWriter pw = response.getWriter();
-			pw.print(totalArray.toString());
-			pw.flush();
-			pw.close();*/
-		
+		// 현재페이지의 목록데이터
+		/*
+		 * out.print(totalArray.toString());
+		 * 
+		 * PrintWriter pw = response.getWriter(); pw.print(totalArray.toString());
+		 * pw.flush(); pw.close();
+		 */
+
 		return "jsp/chartdata/weekdaySalesData";
 	}
-	
-	@RequestMapping(value="monthSalesData.do")
-	public String monthSalesChart(Model model,HttpSession session) {
-		
-		MasterBean master=(MasterBean)session.getAttribute("master");
+
+	@RequestMapping(value = "monthSalesData.do")
+	public String monthSalesChart(Model model, HttpSession session) {
+
+		MasterBean master = (MasterBean) session.getAttribute("master");
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-	    map.put("storename", storename);
-		//map.put("storename", "교동짬뽕-선릉점");
+		map.put("storename", storename);
+		// map.put("storename", "교동짬뽕-선릉점");
 
-		DataDao dao =data;
+		DataDao dao = data;
 		List<MonthSalesDataBean> list = dao.selectMonthSalesData(map);
-		//out.print(list);
+		// out.print(list);
 
 		JSONArray totalArray = new JSONArray();
 		String[] color = { "#FF0F00", "#FF6600", "#FF9E01", "#FCD202", "#F8FF01", "#B0DE09", "#04D215", "#0D8ECF",
@@ -1009,24 +977,119 @@ public class BaegopangController {
 			totalArray.add(jsonObj);
 		}
 
-		//현재페이지의 목록데이터
-		/*out.print(totalArray.toString());
+		// 현재페이지의 목록데이터
+		/*
+		 * out.print(totalArray.toString());
+		 * 
+		 * PrintWriter pw = response.getWriter(); pw.print(totalArray.toString());
+		 * pw.close(); pw.flush();
+		 */
 
-		PrintWriter pw = response.getWriter();
-		pw.print(totalArray.toString());
-		pw.close();
-		pw.flush();*/
-		
-		
-		
-		
-		model.addAttribute("json",totalArray);
-		
+		model.addAttribute("json", totalArray);
+
 		return "jsp/chartdata/monthSalesData";
 	}
-	
-	
-	
-	
+
+	@RequestMapping(value = "masterInfo.do")
+	public String masterInfo(Model model, HttpSession session) {
+
+		MasterBean storename = (MasterBean) session.getAttribute("master");
+
+		OrderDao dao = order;
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		map.put("storename", storename.getStorename());
+
+		MasterBean mbean = dao.selectMaster(map);
+		StoreBean sbean = dao.selectStore(map);
+
+		model.addAttribute("mbean", mbean);
+		model.addAttribute("sbean", sbean);
+
+		return "jsp/masterInfo";
+	}
+
+	@RequestMapping(value = "masterUpdate.do")
+	public String masterUpdate(HttpSession session, @RequestParam(value = "pw", required = false) String pw,
+			@RequestParam(value = "maddress1", required = false) String maddress1,
+			@RequestParam(value = "maddress2", required = false) String maddress2,
+			@RequestParam(value = "mtel1", required = false) String mtel1,
+			@RequestParam(value = "mtel2", required = false) String mtel2,
+			@RequestParam(value = "mtel3", required = false) String mtel3,
+			@RequestParam(value = "stel1", required = false) String stel1,
+			@RequestParam(value = "stel2", required = false) String stel2,
+			@RequestParam(value = "stel3", required = false) String stel3,
+			@RequestParam(value = "hours", required = false) String hours,
+			@RequestParam(value = "info", required = false) String info) {
+
+		MasterBean mbean = (MasterBean) session.getAttribute("master");
+		String storename = mbean.getStorename();
+
+		String maddress = maddress1.concat(" " + maddress2);
+		String mtel = mtel1.concat("-" + mtel2).concat("-" + mtel3);
+
+		String stel = stel1.concat("-" + stel2).concat("-" + stel3);
+
+		// master
+		HashMap<String, Object> store = new HashMap<String, Object>();
+
+		store.put("hours", hours);
+		store.put("info", info);
+		store.put("storename", storename);
+		store.put("tel", stel);
+
+		// store
+
+		HashMap<String, Object> master = new HashMap<String, Object>();
+
+		master.put("pw", pw);
+		master.put("address", maddress);
+		master.put("tel", mtel);
+		master.put("storename", storename);
+
+		OrderDao dao = order;
+
+		dao.updateMaster(master);
+		dao.updateStore(store);
+
+		return "redirect:masterInfo.do";
+	}
+
+	@RequestMapping(value = "masterDelete.do")
+	public String masterDelete(@RequestParam(value = "pw", required = false) String pw,
+			@RequestParam(value = "maddress1", required = false) String maddress1,
+			@RequestParam(value = "maddress2", required = false) String maddress2,
+			@RequestParam(value = "mtel1", required = false) String mtel1,
+			@RequestParam(value = "mtel2", required = false) String mtel2,
+			@RequestParam(value = "mtel3", required = false) String mtel3,
+			@RequestParam(value = "stel1", required = false) String stel1,
+			@RequestParam(value = "stel2", required = false) String stel2,
+			@RequestParam(value = "stel3", required = false) String stel3,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "id", required = false) String id,
+			@RequestParam(value = "storename", required = false) String storename,
+			@RequestParam(value = "birth", required = false) String birth) {
+		
+		String maddress=maddress1.concat(" "+maddress2);
+		String mtel=mtel1.concat("-"+mtel2).concat("-"+mtel3);
+		String stel=stel1.concat("-"+stel2).concat("-"+stel3);
+
+		MasterBean mbean=new MasterBean();
+
+		mbean.setPw(pw);
+		mbean.setAddress(maddress);
+		mbean.setTel(mtel);
+		mbean.setName(name);
+		mbean.setId(id);
+		mbean.setStorename(storename);
+		mbean.setBirth(birth);
+
+
+		OrderDao dao=order;
+		dao.dropMaster(mbean);
+
+		return "redirect:index.do";
+	}
 
 }

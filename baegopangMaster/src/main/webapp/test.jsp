@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<a href="/web/salesInfo.do">salesInfo</a>
+<a href="/web/masterInfo.do">salesInfo</a>
 <a href="/web/brandBestData.do">genderData</a>
 
 </body>
