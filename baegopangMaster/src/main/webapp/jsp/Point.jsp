@@ -9,7 +9,7 @@
 <script type="text/javascript">
 	function loadAjax(flag){
 		$.ajax({
-			url:'/BaegopangMaster/jsp/Ajax/PointAjax.jsp?flag='+flag,
+			url:'/web/PointAjax.do?flag='+flag,
 			dataType:'html',
 			type:'GET',
 			success:function(vv){

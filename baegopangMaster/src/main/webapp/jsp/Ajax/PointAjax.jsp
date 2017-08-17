@@ -4,6 +4,8 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,6 +19,7 @@
 	height: 230px;
 	border: 2px solid rgba(255, 140, 0, 0.34);
 	margin-right: 20px;
+	margin-top: 30px;
 	background: white;
 	border-radius: 15px; 
 }
@@ -46,6 +49,7 @@
 #myBrank, #myGrank{
 	display: inline-block;
 	width: 45%;
+	margin-top: 30px;
 	height: 280px;
 	border: 2px solid rgba(255, 140, 0, 0.34);
 	margin-right: 20px;
@@ -102,16 +106,16 @@
 </style>
 </head>
 <body>
-	<%
+	<%-- <%
 		int flag = Integer.parseInt(request.getParameter("flag"));
 		MasterBean mbean = (MasterBean)session.getAttribute("master");
 		String storename = mbean.getStorename();
 		List<PointBean>list = null;
 		PointDao pdao = new PointDao();
 	%>
-
+ --%>
 	<div id="rankdiv">
-		<%
+		<%-- < <%
 			if (flag != 3) {
 				if(flag==1){
 					list = pdao.brandPoint(storename);
@@ -122,58 +126,70 @@
 					PointBean bean = list.get(i);
 					System.out.print(bean.getPoint());
 					if(i<3){
-		%>
+		%>  --%>
+
+			<c:if test="${flag ne 3 }">
+				<c:forEach var="i" items="${list }" varStatus="cnt">
+					<c:choose>
+						<c:when test="${cnt.count lt 4 }">
 		<div id="rank">
-			<%-- <h4 style="color: #FF8C00; margin-left: 10px; font-weight: bold;"><%=i+1 %>µî</h4> --%>
-			<img src="/BaegopangMaster/img/medal/pmedal<%=i+1 %>.png">
+		    <%-- <h4 style="color: #FF8C00; margin-left: 10px; font-weight: bold;">${cnt.count }µî</h4> --%>
+			<img src="img/medal/pmedal${cnt.count }.png">
 		<div id="rank_con">
-			<img src="/BaegopangMaster/img/noimg.jpg" width="100px" height="100px">
+			<img src="img/noimg.jpg" width="100px" height="100px">
 			<div >
-			<h4 style="font-weight: bold; margin-top: 10px;"><%=bean.getStorename() %></h4>
-			<h4 style="font-weight: bold; font-style: italic; color: red; font-size: 15px;"><%=bean.getPoint()%>ÆÎ</h4>
+			<h4 style="font-weight: bold; margin-top: 10px;">${i.storename }</h4>
+			<h4 style="font-weight: bold; font-style: italic; color: red; font-size: 15px;">${i.point }ÆÎ</h4>
 			</div>
 		</div>
 		</div>
-		<%
+	<%-- 	<%
 			}
 		else{ 
-		%>
-		<div id="srank"><h4><%=i+1 %>µî</h4>
+		%> --%>
+		</c:when>
+		<c:otherwise>
+		<div id="srank"><h4>${cnt.count }µî</h4>
 		<div id="rank_subcon">
-			<img src="/BaegopangMaster/img/noimg.jpg">
-			<h3 id="rank_subcon_title_4"><%=bean.getStorename()%></h3>
-			<h3 id="rank_subcon_point_4"><%=bean.getPoint()%>ÆÎ</h3>
+			<img src="img/noimg.jpg">
+			<h3 id="rank_subcon_title_4">${i.storename }</h3>
+			<h3 id="rank_subcon_point_4">${i.point }ÆÎ</h3>
 		</div>
 		</div>	
-		<%		}
+<%-- 		<%		}
 			}
 		}
-		%>
+		%> --%>
+</c:otherwise>
+</c:choose>	
+</c:forEach>
+ </c:if>
 	</div>
-		<%
+		<%-- <%
 			if (flag == 3) {
 				PointBean bbean = pdao.mybrandPoint(storename);
 				PointBean gbean = pdao.myguPoint(storename);
-		%>
+		%> --%>
+		<c:if test="${flag eq 3 }">
 		<div id="myrank">
 			<div id="myBrank">
 				<h4>ºê·£µåº° ¼øÀ§</h4>
-				<img src="/BaegopangMaster/img/noimg.jpg" width="100px" height="100px" style="border-radius: 50px; ">
-				<h4 style="font-weight: bold; font-style: italic; color:#FF8C00;  font-size: 20px;"><%=bbean.getNum() %>µî</h4>
-				<h4 style="font-weight: bold; margin-top: 10px;"><%=bbean.getStorename() %></h4>
-				<h4 style="font-weight: bold; font-style: italic; color: red; font-size: 15px;"><%=bbean.getPoint() %>ÆÎ</h4>
+				<img src="img/noimg.jpg" width="100px" height="100px" style="border-radius: 50px; ">
+				<h4 style="font-weight: bold; font-style: italic; color:#FF8C00;  font-size: 20px;">${bbean.num }µî</h4>
+				<h4 style="font-weight: bold; margin-top: 10px;">${bbean.storename }</h4>
+				<h4 style="font-weight: bold; font-style: italic; color: red; font-size: 15px;">${bbean.point }ÆÎ</h4>
 			</div>
 			<div id="myGrank">
 				<h4>±¸ º° ¼øÀ§</h4>
-				<img src="/BaegopangMaster/img/noimg.jpg" width="100px" height="100px" style="border-radius: 50px; ">
-				<h4 style="font-weight: bold; font-style: italic; color:#FF8C00;  font-size: 20px;"><%=gbean.getNum() %>µî</h4>
-				<h4 style="font-weight: bold; margin-top: 10px;"><%=gbean.getStorename() %></h4>
-				<h4 style="font-weight: bold; font-style: italic; color: red; font-size: 15px;"><%=gbean.getPoint() %>ÆÎ</h4>
+				<img src="img/noimg.jpg" width="100px" height="100px" style="border-radius: 50px; ">
+				<h4 style="font-weight: bold; font-style: italic; color:#FF8C00;  font-size: 20px;">${gbean.num }µî</h4>
+				<h4 style="font-weight: bold; margin-top: 10px;">${gbean.storename }</h4>
+				<h4 style="font-weight: bold; font-style: italic; color: red; font-size: 15px;">${gbean.point }ÆÎ</h4>
 			</div>
 		</div>
-		<%		
+		<%-- <%		
 			}
-		%>
-
+		%> --%>
+</c:if>
 </body>
 </html>

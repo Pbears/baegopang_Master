@@ -6,7 +6,7 @@ public class MasterReplyBean {
 	private String ordernumber;
 	private String id;
 	private String contents;
-	private String regdate;
+	private String regDate;
 	private int ref;
 	private int pnum;
 	private int reply;
@@ -70,12 +70,12 @@ public class MasterReplyBean {
 		this.contents = contents;
 	}
 
-	public String getRegDate() {
-		return regdate;
+	public String getregDate() {
+		return regDate;
 	}
 
-	public void setRegDate(String regDate) {
-		this.regdate = regDate;
+	public void setregDate(String regDate) {
+		this.regDate = regDate;
 	}
 
 	public int getRef() {
@@ -105,7 +105,7 @@ public class MasterReplyBean {
 	@Override
 	public String toString() {
 		return "MasterReplyBean [no=" + no + ", storeName=" + storename + ", orderNumber=" + ordernumber + ", id=" + id
-				+ ", contents=" + contents + ", regDate=" + regdate + ", ref=" + ref + ", pnum=" + pnum + ", reply="
+				+ ", contents=" + contents + ", regDate=" + regDate + ", ref=" + ref + ", pnum=" + pnum + ", reply="
 				+ reply + ", RM=" + RM + ", state=" + state + "]";
 	}
 }

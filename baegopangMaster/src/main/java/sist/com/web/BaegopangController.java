@@ -1,6 +1,6 @@
 package sist.com.web;
 
-import java.io.PrintWriter;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -21,16 +21,23 @@ import sist.spring.bean.BrandDataBean;
 import sist.spring.bean.DaySalesDataBean;
 import sist.spring.bean.GenderDataBean;
 import sist.spring.bean.MasterBean;
+import sist.spring.bean.MasterReplyBean;
+import sist.spring.bean.MasteraskadminBean;
+import sist.spring.bean.MenuBean;
 import sist.spring.bean.MonthSalesDataBean;
 import sist.spring.bean.NoticeBean;
 import sist.spring.bean.OrderBean;
 import sist.spring.bean.PointBean;
+import sist.spring.bean.ReplyTotalBean;
 import sist.spring.bean.StoreBean;
 import sist.spring.bean.WeekDayDataBean;
 import sist.spring.bean.WeekdaySalesDataBean;
 import sist.spring.dao.AdminDao;
 import sist.spring.dao.DataDao;
+import sist.spring.dao.MasterAskDao;
+import sist.spring.dao.MasterReplyDao;
 import sist.spring.dao.MemberDao;
+import sist.spring.dao.MenuManageDao;
 import sist.spring.dao.NoticeDao;
 import sist.spring.dao.OrderDao;
 import sist.spring.dao.PointDao;
@@ -50,7 +57,13 @@ public class BaegopangController {
 	private PointDao point;
 	@Resource(name = "dataDao")
 	private DataDao data;
-
+	@Resource(name = "menuManageDao")
+	private MenuManageDao menu;
+	@Resource(name = "masterAskDao")
+	private MasterAskDao ask;
+	@Resource(name = "masterReplyDao")
+	private MasterReplyDao reply;
+ 
 	@RequestMapping(value = "index.do")
 	public String signIn() {
 
@@ -59,9 +72,9 @@ public class BaegopangController {
 	}
 
 	@RequestMapping(value = "login.do")
-	public String login(Model model, @RequestParam(value = "userId", required = false) String userId,
-			@RequestParam(value = "userPw", required = false) String userPw) {
-
+	public String login(Model model, @RequestParam(name = "userId", required = false) String userId,
+			@RequestParam(name = "userPw", required = false) String userPw) {
+		System.out.println(userId);
 		MasterBean bean = member.memberCheck(userId);
 		if (userPw.equals(bean.getPw())) {
 			model.addAttribute("master", bean);
@@ -79,8 +92,8 @@ public class BaegopangController {
 		 * String id = (String) session.getAttribute("id"); MemberDao dao = new
 		 * MemberDao(); MasterBean bean = (MasterBean) session.getAttribute("master");
 		 * String storename = bean.getStorename(); NoticeDao ndao = new NoticeDao();
-		 * session¿¡ ³ÖÁö¸»°í (MasterBean)session.getAttribute("master") ¾È¿¡ Á¤º¸ ´Ù ³Ö¾îµ×À¸´Ï±î ¿©±â¼­
-		 * »Ì¾Æ¼­ ¾²¼¼¿ë ~ È®ÀÎÇÏ½Ã¸é ÀÌ ÁÖ¼® »èÁ¦ºÎÅ¹µå¸³´Ï´Ù.
+		 * sessionï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (MasterBean)session.getAttribute("master") ï¿½È¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½â¼­
+		 * ï¿½Ì¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ~ È®ï¿½ï¿½ï¿½Ï½Ã¸ï¿½ ï¿½ï¿½ ï¿½Ö¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¹ï¿½å¸³ï¿½Ï´ï¿½.
 		 * 
 		 * session.setAttribute("storename", storename);
 		 */
@@ -123,7 +136,7 @@ public class BaegopangController {
 			totalPage = 1;
 		int start = 1 + (currentPage - 1) * pageScale;
 		int end = pageScale + (currentPage - 1) * pageScale;
-		// out.print(query+" "+data ); //Ãâ·ÂÈ®ÀÎ
+		// out.print(query+" "+data ); //ï¿½ï¿½ï¿½È®ï¿½ï¿½
 		int currentBlock = currentPage % pageScale == 0 ? (currentPage / pageScale) : (currentPage / pageScale + 1);
 		int startPage = 1 + (currentBlock - 1) * pageScale;
 		int endPage = pageScale + (currentBlock - 1) * pageScale;
@@ -142,6 +155,34 @@ public class BaegopangController {
 		return "jsp/NoticeList";
 	}
 
+	@RequestMapping(value="menuManager.do")
+	public String menuManage(Model model,HttpSession session) {
+		MasterBean master=(MasterBean)session.getAttribute("master");
+	//	MenuManageDao dao = new MenuManageDao();
+		String picture = "img/noimage.jpg";
+		List<MenuBean> list = menu.selectMenu(master.getId());
+		List<MenuBean> mbslist = menu.myStoreMenu(master.getStorename());
+		//List<MenuBean> ismenu = dao.selectMenuOne();
+		
+		model.addAttribute("selmenu", list);
+		model.addAttribute("mybmenu", mbslist);
+		return "jsp/menuManager";
+	}
+	@RequestMapping(value="insertMenuProcess.do")
+	public String insertMenuProcess(Model model,HttpSession session,@RequestParam(name="menuname")String menuname) {
+		MasterBean master=(MasterBean)session.getAttribute("master");
+		HashMap<String,String>map=new HashMap<String,String>();
+		map.put("menuname", menuname);
+		map.put("storename", master.getStorename());
+		menu.insertMenu(map); 
+		return "redirect:menuManager.do";
+	}
+	@RequestMapping(value="deleteProcess.do")
+	public String deleteProcess(@RequestParam(name="menuname")String menuname) {
+		menu.deleteMenu(menuname);
+		return "redirect:menuManager.do";
+	}
+	
 	@RequestMapping(value = "order.do")
 	public String order(Model model, @RequestParam(value = "query", required = false) String query,
 			@RequestParam(value = "data", required = false) String data,
@@ -158,7 +199,7 @@ public class BaegopangController {
 		MasterBean storename = (MasterBean) session.getAttribute("master");
 
 		map.put("storename", storename.getStorename());
-		// map.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
+		// map.put("storename", "ï¿½ï¿½ï¿½ï¿½Ä¡Å²-ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½");
 
 		int pageScale = 10;
 		map.put("Q", query);
@@ -175,7 +216,7 @@ public class BaegopangController {
 			totalPage = 1;
 		int start = 1 + (currentPage - 1) * pageScale;
 		int end = pageScale + (currentPage - 1) * pageScale;
-		// out.print(query+" "+data ); //Ãâ·ÂÈ®ÀÎ
+		// out.print(query+" "+data ); //ï¿½ï¿½ï¿½È®ï¿½ï¿½
 		int currentBlock = currentPage % pageScale == 0 ? (currentPage / pageScale) : (currentPage / pageScale + 1);
 		int startPage = 1 + (currentBlock - 1) * pageScale;
 		int endPage = pageScale + (currentBlock - 1) * pageScale;
@@ -200,7 +241,7 @@ public class BaegopangController {
 		HashMap<String, Object> map2 = new HashMap<String, Object>();
 
 		map2.put("storename", storename.getStorename());
-		// map2.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
+		// map2.put("storename", "ï¿½ï¿½ï¿½ï¿½Ä¡Å²-ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½");
 
 		int pageScale2 = 10;
 		map2.put("Q2", query2);
@@ -217,7 +258,7 @@ public class BaegopangController {
 			totalPage2 = 1;
 		int start2 = 1 + (currentPage2 - 1) * pageScale2;
 		int end2 = pageScale2 + (currentPage2 - 1) * pageScale2;
-		// out.print(query+" "+data ); //Ãâ·ÂÈ®ÀÎ
+		// out.print(query+" "+data ); //ï¿½ï¿½ï¿½È®ï¿½ï¿½
 		int currentBlock2 = currentPage2 % pageScale2 == 0 ? (currentPage2 / pageScale2)
 				: (currentPage2 / pageScale2 + 1);
 		int startPage2 = 1 + (currentBlock2 - 1) * pageScale2;
@@ -255,7 +296,169 @@ public class BaegopangController {
 
 		return "jsp/masterOrder";
 	}
+	@RequestMapping(value="ReplyManage.do")
+	public String ReplyManage(Model model,HttpSession session,@RequestParam(value = "page", required = false) String page)throws Exception{
+		MasterBean master=(MasterBean)session.getAttribute("master");
+ 
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> ckmap = new HashMap<String, Object>();
+		map.put("storename", master.getStorename());
+		map.put("id", master.getId());
+		
+		int pageScale = 6;
 
+		int currentPage = 0;
+		int totalRow = reply.getRTotalRows(master.getStorename());
+		try {
+			currentPage = Integer.parseInt(page);
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		int totalPage = totalRow % pageScale == 0 ? totalRow / pageScale : totalRow / pageScale + 1;
+		if (totalRow == 0)
+			totalPage = 1;
+		int start = 1 + (currentPage - 1) * pageScale;
+		int end = pageScale + (currentPage - 1) * pageScale;
+		//out.print(query+"   "+data ); //ï¿½ï¿½ï¿½È®ï¿½ï¿½
+		int currentBlock = currentPage % pageScale == 0 ? (currentPage / pageScale) : (currentPage / pageScale + 1);
+		int startPage = 1 + (currentBlock - 1) * pageScale;
+		int endPage = pageScale + (currentBlock - 1) * pageScale;
+		//   out.println(startPage+" "+endPage+ " "+currentBlock+" "+totalPage);
+		if (totalPage <= endPage)
+			endPage = totalPage;
+		map.put("start", start);
+		map.put("end", end);
+		
+		List<MasterReplyBean>list = reply.selectReply(map);
+		System.out.println(list);
+		ReplyTotalBean replytotal = null;
+		MasterReplyBean bean = null;
+		for (int i = 0; i < list.size(); i++) {
+			 bean = list.get(i);
+		}
+	/*	ckmap.put("storename", master.getStorename());
+		ckmap.put("id", master.getId());
+		ckmap.put("pnum", bean.getPnum());
+		int ck=reply.checkReply(ckmap);
+		*/
+		HashMap<String, Object> omap = new HashMap<String, Object>();
+		omap.put("pnum", bean.getPnum());
+		omap.put("id", master.getId());
+		String sbean= reply.selectOneRep(omap);
+		
+		session.setAttribute("sbean", bean);
+		model.addAttribute("replylist", list);
+	//	model.addAttribute("ck", ck);
+		model.addAttribute("sbean", sbean);
+		return "jsp/ReplyManage";
+	}
+
+	@RequestMapping(value = "insertReply")
+	public String insertReply(HttpSession session,Model model, @RequestParam(value="contents",required=false)String contents,@RequestParam(value="pnum",required=false)Integer pnum)throws Exception {
+		MasterBean master=(MasterBean)session.getAttribute("master");
+		String storename = master.getStorename();
+		String id = master.getId();
+		HashMap<String,Object>map = new HashMap<String,Object>();
+		map.put("storename",storename);
+		map.put("pnum",pnum);
+		map.put("contents",contents);
+		map.put("id",id);
+		
+		reply.insertReply(map);
+		reply.updateReply(map);
+		reply.getPoint(id);
+		return "web/ReplyManage.do";
+	}
+	@RequestMapping(value="Point.do")
+	public String Point() {
+		return "jsp/Point";
+	}
+	@RequestMapping(value="PointAjax.do")
+	public String pointAjax(Model model,HttpSession session,@RequestParam(value="flag")int flag)throws Exception {
+		MasterBean master=(MasterBean)session.getAttribute("master");
+		String storename = master.getStorename();
+		List<PointBean>list = null; 
+		if(flag==1){
+			list = point.brandPoint(storename);
+		}else{
+			list = point.guPoint(storename);
+		}
+		PointBean bbean = point.mybrandPoint(storename);
+		PointBean gbean = point.myguPoint(storename);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("flag", flag);
+		model.addAttribute("gbean", gbean);
+		model.addAttribute("bbean", bbean);
+		return "jsp/Ajax/PointAjax";
+	}
+	
+	@RequestMapping(value="question.do")
+	public String question(Model model,HttpSession session,@RequestParam(value = "page", required = false) Integer page)throws Exception {
+		MasterBean master=(MasterBean)session.getAttribute("master");
+		
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("masterid", master.getId());
+		int pageScale = 6;
+		int currentPage = 0;
+		int totalRow = ask.getTotalRows(master.getId());
+		try {
+			currentPage = page;
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		int totalPage = totalRow % pageScale == 0 ? totalRow / pageScale : totalRow / pageScale + 1;
+		if (totalRow == 0)
+			totalPage = 1;
+		int start = 1 + (currentPage - 1) * pageScale;
+		int end = pageScale + (currentPage - 1) * pageScale;
+		// out.print(query+" "+data ); //ï¿½ï¿½ï¿½È®ï¿½ï¿½
+		int currentBlock = currentPage % pageScale == 0 ? (currentPage / pageScale) : (currentPage / pageScale + 1);
+		int startPage = 1 + (currentBlock - 1) * pageScale;
+		int endPage = pageScale + (currentBlock - 1) * pageScale;
+		// out.println(startPage+" "+endPage+ " "+currentBlock+" "+totalPage);
+		if (totalPage <= endPage)
+			endPage = totalPage;
+		
+		
+		map.put("start", start);
+		map.put("end", end);
+		model.addAttribute("currentBlock", currentBlock);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("totalPage", totalPage);
+		
+		
+		List<MasteraskadminBean> list = ask.selectAsk(map);
+		
+		model.addAttribute("list", list);
+		return "jsp/question";
+	}
+	@RequestMapping(value = "insertQuestion")
+	public String insertQuestion() {
+		return "jsp/insertQuestion";
+	}
+	@RequestMapping(value = "insertAskProcess.do")
+	public String insertAsk(Model model,HttpSession session,@RequestParam(value="title" , required = false)String title,@RequestParam(value="contents" ,required = false)String contents) {
+		MasterBean master=(MasterBean)session.getAttribute("master");
+		MasteraskadminBean bean = new MasteraskadminBean();
+		System.out.println(title);
+		bean.setTitle(title);
+		bean.setMasterinfo(contents);
+		bean.setMasterid(master.getId());
+		ask.insertAsk(bean);
+		return "jsp/insertAskProcess";
+	}
+	@RequestMapping(value = "selectQuestion")
+	public String selectQuestion(Model model,HttpSession session,@RequestParam(name="title")String title) {
+		MasteraskadminBean mbean =null;
+		mbean = ask.selQuestionOne(title);
+		
+		model.addAttribute("bean", mbean);
+		return "jsp/selectQuestion";
+	}
 	@RequestMapping(value = "orderupdate.do")
 	public String orderUpdate(@RequestParam(value = "flag", required = false) String flag,
 			@RequestParam(value = "ordernumber", required = false) String ordernumber,
@@ -272,10 +475,10 @@ public class BaegopangController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("ordernumber", ordernumber);
 		if (flag.equals("check")) {
-			map.put("state", "½ÂÀÎ¿Ï·á");
+			map.put("state", "ï¿½ï¿½ï¿½Î¿Ï·ï¿½");
 			dao.updateOrder(map);
 		} else if (flag.equals("del")) {
-			map.put("state", "¹è´Þ¿Ï·á");
+			map.put("state", "ï¿½ï¿½Þ¿Ï·ï¿½");
 			String orderday = ordertime.substring(0, 10);
 			String ordermonth = ordertime.substring(0, 7);
 			map.put("amount", amount);
@@ -286,14 +489,14 @@ public class BaegopangController {
 			map.put("ordermonth", ordermonth);
 			map.put("memberid", memberid);
 
-			// ¿äÀÏ
+			// ï¿½ï¿½ï¿½ï¿½
 			Calendar cal = Calendar.getInstance();
 
 			cal.set(Calendar.YEAR, Integer.parseInt(orderday.substring(0, 4)));
 			cal.set(Calendar.MONTH, Integer.parseInt(orderday.substring(5, 7)) - 1);
 			cal.set(Calendar.DATE, Integer.parseInt(orderday.substring(8, 10)));
 
-			String[] dayOfWeek = { "ÀÏ", "¿ù", "È­", "¼ö", "¸ñ", "±Ý", "Åä" };
+			String[] dayOfWeek = { "ï¿½ï¿½", "ï¿½ï¿½", "È­", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½" };
 			String weekday = dayOfWeek[cal.get(Calendar.DAY_OF_WEEK) - 1];
 
 			map.put("weekday", weekday);
@@ -303,7 +506,7 @@ public class BaegopangController {
 			dao.updateMemberPang(map);
 
 		} else if (flag.equals("refuse")) {
-			map.put("state", "°ÅÀý");
+			map.put("state", "ï¿½ï¿½ï¿½ï¿½");
 			dao.updateOrder(map);
 		}
 
@@ -315,7 +518,7 @@ public class BaegopangController {
 
 		MasterBean master = (MasterBean) session.getAttribute("master");
 		String storename = master.getStorename();
-		// String storename = "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡";
+		// String storename = "ï¿½ï¿½ï¿½ï¿½Ä¡Å²-ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
 		DataDao dao = data;
@@ -328,9 +531,9 @@ public class BaegopangController {
 		for (int i = 0; i < list.size(); i++) {
 
 			if (man == null) {
-				if (((GenderDataBean) list.get(i)).getGender().equals("³²")) {
+				if (((GenderDataBean) list.get(i)).getGender().equals("ï¿½ï¿½")) {
 					man = String.valueOf(((GenderDataBean) list.get(i)).getRatiogender());
-					json += "{" + "\"type\" : \"³²ÀÚ\"," + "\"percent\" : \"" + man + "\"," + "\"color\" : \"#ff9e01\","
+					json += "{" + "\"type\" : \"ï¿½ï¿½ï¿½ï¿½\"," + "\"percent\" : \"" + man + "\"," + "\"color\" : \"#ff9e01\","
 							+ "\"subs\" : " + "[";
 				}
 
@@ -342,10 +545,10 @@ public class BaegopangController {
 		for (int i = 0; i < list.size(); i++) {
 			GenderDataBean bean = ((GenderDataBean) list.get(i));
 
-			if (bean.getGender().equals("³²") && (bean.getRank() == 1 || bean.getRank() == 2 || bean.getRank() == 3)) {
+			if (bean.getGender().equals("ï¿½ï¿½") && (bean.getRank() == 1 || bean.getRank() == 2 || bean.getRank() == 3)) {
 				json += "{" + "\"type\" : \"" + bean.getMenuname() + "\"," + "\"percent\" : \"" + bean.getRatiomenu()
 						+ "\"" + "},";
-			} else if (bean.getGender().equals("³²") && bean.getRank() != 1 && bean.getRank() != 2
+			} else if (bean.getGender().equals("ï¿½ï¿½") && bean.getRank() != 1 && bean.getRank() != 2
 					&& bean.getRank() != 3) {
 				metc += bean.getRatiomenu();
 			}
@@ -353,7 +556,7 @@ public class BaegopangController {
 		}
 		if (metc != 0) {
 
-			json += "{" + "\"type\" : \"±âÅ¸\"," + "\"percent\" : \"" + metc + "\"" + "},";
+			json += "{" + "\"type\" : \"ï¿½ï¿½Å¸\"," + "\"percent\" : \"" + metc + "\"" + "},";
 		}
 
 		if (man != null) {
@@ -364,9 +567,9 @@ public class BaegopangController {
 		for (int i = 0; i < list.size(); i++) {
 
 			if (woman == null) {
-				if (((GenderDataBean) list.get(i)).getGender().equals("¿©")) {
+				if (((GenderDataBean) list.get(i)).getGender().equals("ï¿½ï¿½")) {
 					woman = String.valueOf(((GenderDataBean) list.get(i)).getRatiogender());
-					json += "{" + "\"type\" : \"¿©ÀÚ\"," + "\"percent\" : \"" + woman + "\"," + "\"color\" : \"#b0de09\","
+					json += "{" + "\"type\" : \"ï¿½ï¿½ï¿½ï¿½\"," + "\"percent\" : \"" + woman + "\"," + "\"color\" : \"#b0de09\","
 							+ "\"subs\" : " + "[";
 				}
 
@@ -379,10 +582,10 @@ public class BaegopangController {
 		for (int i = 0; i < list.size(); i++) {
 			GenderDataBean bean = ((GenderDataBean) list.get(i));
 
-			if (bean.getGender().equals("¿©") && (bean.getRank() == 1 || bean.getRank() == 2 || bean.getRank() == 3)) {
+			if (bean.getGender().equals("ï¿½ï¿½") && (bean.getRank() == 1 || bean.getRank() == 2 || bean.getRank() == 3)) {
 				json += "{" + "\"type\" : \"" + bean.getMenuname() + "\"," + "\"percent\" : \"" + bean.getRatiomenu()
 						+ "\"" + "},";
-			} else if (bean.getGender().equals("¿©") && bean.getRank() != 1 && bean.getRank() != 2
+			} else if (bean.getGender().equals("ï¿½ï¿½") && bean.getRank() != 1 && bean.getRank() != 2
 					&& bean.getRank() != 3) {
 				wetc += bean.getRatiomenu();
 			}
@@ -390,7 +593,7 @@ public class BaegopangController {
 		}
 		if (metc != 0) {
 
-			json += "{" + "\"type\" : \"±âÅ¸\"," + "\"percent\" : \"" + wetc + "\"" + "},";
+			json += "{" + "\"type\" : \"ï¿½ï¿½Å¸\"," + "\"percent\" : \"" + wetc + "\"" + "},";
 		}
 
 		json = (new String(json)).substring(0, json.lastIndexOf(","));
@@ -425,7 +628,7 @@ public class BaegopangController {
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		// map.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
+		// map.put("storename", "ï¿½ï¿½ï¿½ï¿½Ä¡Å²-ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½");
 		DataDao dao = data;
 		List<AgeDataBean> list = dao.selectAgeData(map);
 		// out.print(list);
@@ -478,7 +681,7 @@ public class BaegopangController {
 			if (metc2[i] != 0) {
 
 				JSONObject subObj = new JSONObject();
-				subObj.put("type", "±âÅ¸");
+				subObj.put("type", "ï¿½ï¿½Å¸");
 				subObj.put("percent", metc2[i]);
 				subArray2[i].add(subObj);
 
@@ -491,7 +694,7 @@ public class BaegopangController {
 			if (bean.getAge() == 10) {
 				if (ageRatio2[0] == null) {
 					ageRatio2[0] = String.valueOf(bean.getRatioage());
-					ageObj2[0].put("type", "10´ë");
+					ageObj2[0].put("type", "10ï¿½ï¿½");
 					ageObj2[0].put("percent", ageRatio2[0]);
 					ageObj2[0].put("color", "#FF0F00");
 					ageObj2[0].put("subs", subArray2[0]);
@@ -508,7 +711,7 @@ public class BaegopangController {
 			} else if (bean.getAge() == 20) {
 				if (ageRatio2[1] == null) {
 					ageRatio2[1] = String.valueOf(bean.getRatioage());
-					ageObj2[1].put("type", "20´ë");
+					ageObj2[1].put("type", "20ï¿½ï¿½");
 					ageObj2[1].put("percent", ageRatio2[1]);
 					ageObj2[1].put("color", "#FF9E01");
 					ageObj2[1].put("subs", subArray2[1]);
@@ -524,7 +727,7 @@ public class BaegopangController {
 			} else if (bean.getAge() == 30) {
 				if (ageRatio2[2] == null) {
 					ageRatio2[2] = String.valueOf(bean.getRatioage());
-					ageObj2[2].put("type", "30´ë");
+					ageObj2[2].put("type", "30ï¿½ï¿½");
 					ageObj2[2].put("percent", ageRatio2[2]);
 					ageObj2[2].put("color", "#F8FF01");
 					ageObj2[2].put("subs", subArray2[2]);
@@ -541,7 +744,7 @@ public class BaegopangController {
 			} else if (bean.getAge() == 40) {
 				if (ageRatio2[3] == null) {
 					ageRatio2[3] = String.valueOf(bean.getRatioage());
-					ageObj2[3].put("type", "40´ë");
+					ageObj2[3].put("type", "40ï¿½ï¿½");
 					ageObj2[3].put("percent", ageRatio2[3]);
 					ageObj2[3].put("color", "#04D215");
 					ageObj2[3].put("subs", subArray2[3]);
@@ -558,7 +761,7 @@ public class BaegopangController {
 			} else if (bean.getAge() == 50) {
 				if (ageRatio2[4] == null) {
 					ageRatio2[4] = String.valueOf(bean.getRatioage());
-					ageObj2[4].put("type", "50´ë");
+					ageObj2[4].put("type", "50ï¿½ï¿½");
 					ageObj2[4].put("percent", ageRatio2[4]);
 					ageObj2[4].put("color", "#0D8ECF");
 					ageObj2[4].put("subs", subArray2[4]);
@@ -576,7 +779,7 @@ public class BaegopangController {
 
 		}
 
-		// ÇöÀçÆäÀÌÁöÀÇ ¸ñ·Ïµ¥ÀÌÅÍ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
 
 		model.addAttribute("json", totalArray2);
 
@@ -595,7 +798,7 @@ public class BaegopangController {
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		// map.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
+		// map.put("storename", "ï¿½ï¿½ï¿½ï¿½Ä¡Å²-ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½");
 		DataDao dao = data;
 		List<WeekDayDataBean> list = dao.selectWeekDayData(map);
 		// out.print(list);
@@ -612,7 +815,7 @@ public class BaegopangController {
 		for (int i = 0; i < list.size(); i++) {
 			WeekDayDataBean bean = list.get(i);
 
-			if (bean.getWeekday().equals("¿ù")) {
+			if (bean.getWeekday().equals("ï¿½ï¿½")) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc1[0] += bean.getRatiomenu();
@@ -624,31 +827,31 @@ public class BaegopangController {
 					metc1[1] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getWeekday().equals("¼ö")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc1[2] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getWeekday().equals("¸ñ")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc1[3] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getWeekday().equals("±Ý")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc1[4] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getWeekday().equals("Åä")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc1[5] += bean.getRatiomenu();
 				}
 
-			} else if (bean.getWeekday().equals("ÀÏ")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 
 				if (bean.getRank() != 1 && bean.getRank() != 2 && bean.getRank() != 3) {
 					metc1[6] += bean.getRatiomenu();
@@ -660,7 +863,7 @@ public class BaegopangController {
 			if (metc1[i] != 0) {
 
 				JSONObject subObj = new JSONObject();
-				subObj.put("type", "±âÅ¸");
+				subObj.put("type", "ï¿½ï¿½Å¸");
 				subObj.put("percent", metc1[i]);
 				subArray1[i].add(subObj);
 
@@ -670,10 +873,10 @@ public class BaegopangController {
 		for (int i = 0; i < list.size(); i++) {
 			WeekDayDataBean bean = list.get(i);
 
-			if (bean.getWeekday().equals("¿ù")) {
+			if (bean.getWeekday().equals("ï¿½ï¿½")) {
 				if (dayRatio1[0] == null) {
 					dayRatio1[0] = String.valueOf(bean.getRatioday());
-					dayObj1[0].put("type", "¿ù¿äÀÏ");
+					dayObj1[0].put("type", "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 					dayObj1[0].put("percent", dayRatio1[0]);
 					dayObj1[0].put("color", "#FF0F00");
 					dayObj1[0].put("subs", subArray1[0]);
@@ -690,7 +893,7 @@ public class BaegopangController {
 			} else if (bean.getWeekday().equals("È­")) {
 				if (dayRatio1[1] == null) {
 					dayRatio1[1] = String.valueOf(bean.getRatioday());
-					dayObj1[1].put("type", "È­¿äÀÏ");
+					dayObj1[1].put("type", "È­ï¿½ï¿½ï¿½ï¿½");
 					dayObj1[1].put("percent", dayRatio1[1]);
 					dayObj1[1].put("color", "#FF9E01");
 					dayObj1[1].put("subs", subArray1[1]);
@@ -704,10 +907,10 @@ public class BaegopangController {
 					subArray1[1].add(subObj);
 				}
 
-			} else if (bean.getWeekday().equals("¼ö")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 				if (dayRatio1[2] == null) {
 					dayRatio1[2] = String.valueOf(bean.getRatioday());
-					dayObj1[2].put("type", "¼ö¿äÀÏ");
+					dayObj1[2].put("type", "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 					dayObj1[2].put("percent", dayRatio1[2]);
 					dayObj1[2].put("color", "#F8FF01");
 					dayObj1[2].put("subs", subArray1[2]);
@@ -721,10 +924,10 @@ public class BaegopangController {
 					subArray1[2].add(subObj);
 				}
 
-			} else if (bean.getWeekday().equals("¸ñ")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 				if (dayRatio1[3] == null) {
 					dayRatio1[3] = String.valueOf(bean.getRatioday());
-					dayObj1[3].put("type", "¸ñ¿äÀÏ");
+					dayObj1[3].put("type", "ï¿½ï¿½ï¿½ï¿½ï¿½");
 					dayObj1[3].put("percent", dayRatio1[3]);
 					dayObj1[3].put("color", "#04D215");
 					dayObj1[3].put("subs", subArray1[3]);
@@ -738,10 +941,10 @@ public class BaegopangController {
 					subArray1[3].add(subObj);
 				}
 
-			} else if (bean.getWeekday().equals("±Ý")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 				if (dayRatio1[4] == null) {
 					dayRatio1[4] = String.valueOf(bean.getRatioday());
-					dayObj1[4].put("type", "±Ý¿äÀÏ");
+					dayObj1[4].put("type", "ï¿½Ý¿ï¿½ï¿½ï¿½");
 					dayObj1[4].put("percent", dayRatio1[4]);
 					dayObj1[4].put("color", "#0D8ECF");
 					dayObj1[4].put("subs", subArray1[4]);
@@ -755,10 +958,10 @@ public class BaegopangController {
 					subArray1[4].add(subObj);
 				}
 
-			} else if (bean.getWeekday().equals("Åä")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 				if (dayRatio1[5] == null) {
 					dayRatio1[5] = String.valueOf(bean.getRatioday());
-					dayObj1[5].put("type", "Åä¿äÀÏ");
+					dayObj1[5].put("type", "ï¿½ï¿½ï¿½ï¿½ï¿½");
 					dayObj1[5].put("percent", dayRatio1[5]);
 					dayObj1[5].put("color", "#2A0CD0");
 					dayObj1[5].put("subs", subArray1[5]);
@@ -772,10 +975,10 @@ public class BaegopangController {
 					subArray1[5].add(subObj);
 				}
 
-			} else if (bean.getWeekday().equals("ÀÏ")) {
+			} else if (bean.getWeekday().equals("ï¿½ï¿½")) {
 				if (dayRatio1[6] == null) {
 					dayRatio1[6] = String.valueOf(bean.getRatioday());
-					dayObj1[6].put("type", "ÀÏ¿äÀÏ");
+					dayObj1[6].put("type", "ï¿½Ï¿ï¿½ï¿½ï¿½");
 					dayObj1[6].put("percent", dayRatio1[6]);
 					dayObj1[6].put("color", "#8A0CCF");
 					dayObj1[6].put("subs", subArray1[6]);
@@ -795,7 +998,7 @@ public class BaegopangController {
 
 		model.addAttribute("json", totalArray1);
 
-		// ÇöÀçÆäÀÌÁöÀÇ ¸ñ·Ïµ¥ÀÌÅÍ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
 		/*
 		 * out.print(totalArray1);
 		 * 
@@ -813,7 +1016,7 @@ public class BaegopangController {
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		// map.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
+		// map.put("storename", "ï¿½ï¿½ï¿½ï¿½Ä¡Å²-ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½");
 
 		DataDao dao = data;
 		List<BrandDataBean> list = dao.selectBrandData(map);
@@ -834,7 +1037,7 @@ public class BaegopangController {
 
 		if (metc != 0) {
 			JSONObject obj = new JSONObject();
-			obj.put("country", "±âÅ¸");
+			obj.put("country", "ï¿½ï¿½Å¸");
 			obj.put("litres", metc);
 			totalArray.add(obj);
 
@@ -852,7 +1055,7 @@ public class BaegopangController {
 
 		}
 
-		// ÇöÀçÆäÀÌÁöÀÇ ¸ñ·Ïµ¥ÀÌÅÍ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
 		model.addAttribute("json", totalArray);
 		/*
 		 * out.print(totalArray.toString());
@@ -879,7 +1082,7 @@ public class BaegopangController {
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		// map.put("storename", "±Á³×Ä¡Å²-¿ª»ï1µ¿Á¡");
+		// map.put("storename", "ï¿½ï¿½ï¿½ï¿½Ä¡Å²-ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½");
 
 		DataDao dao = data;
 		List<DaySalesDataBean> list = dao.selectDaySalesData(map);
@@ -900,7 +1103,7 @@ public class BaegopangController {
 
 		model.addAttribute("json", totalArray);
 
-		// ÇöÀçÆäÀÌÁöÀÇ ¸ñ·Ïµ¥ÀÌÅÍ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
 		// out.print(totalArray.toString());
 
 		/*
@@ -918,7 +1121,7 @@ public class BaegopangController {
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		// map.put("storename", "±³µ¿Â«»Í-¼±¸ªÁ¡");
+		// map.put("storename", "ï¿½ï¿½ï¿½ï¿½Â«ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 
 		DataDao dao = data;
 		List<WeekdaySalesDataBean> list = dao.selectWeekDaySalesData(map);
@@ -931,7 +1134,7 @@ public class BaegopangController {
 			WeekdaySalesDataBean bean = list.get(i);
 
 			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("country", bean.getWeekday() + "¿äÀÏ");
+			jsonObj.put("country", bean.getWeekday() + "ï¿½ï¿½ï¿½ï¿½");
 			jsonObj.put("visits", bean.getAvgsales());
 			jsonObj.put("color", color[i]);
 			totalArray.add(jsonObj);
@@ -939,7 +1142,7 @@ public class BaegopangController {
 
 		model.addAttribute("json", totalArray);
 
-		// ÇöÀçÆäÀÌÁöÀÇ ¸ñ·Ïµ¥ÀÌÅÍ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
 		/*
 		 * out.print(totalArray.toString());
 		 * 
@@ -957,7 +1160,7 @@ public class BaegopangController {
 		String storename = master.getStorename();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("storename", storename);
-		// map.put("storename", "±³µ¿Â«»Í-¼±¸ªÁ¡");
+		// map.put("storename", "ï¿½ï¿½ï¿½ï¿½Â«ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 
 		DataDao dao = data;
 		List<MonthSalesDataBean> list = dao.selectMonthSalesData(map);
@@ -971,13 +1174,13 @@ public class BaegopangController {
 			MonthSalesDataBean bean = list.get(i);
 
 			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("country", bean.getMonth() + "¿ù");
+			jsonObj.put("country", bean.getMonth() + "ï¿½ï¿½");
 			jsonObj.put("visits", bean.getAvgsales());
 			jsonObj.put("color", color[i]);
 			totalArray.add(jsonObj);
 		}
 
-		// ÇöÀçÆäÀÌÁöÀÇ ¸ñ·Ïµ¥ÀÌÅÍ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
 		/*
 		 * out.print(totalArray.toString());
 		 * 

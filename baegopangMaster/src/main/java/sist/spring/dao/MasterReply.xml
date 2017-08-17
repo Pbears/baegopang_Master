@@ -17,7 +17,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE STORENAME = #{storename} AND id != #{id}
 	</select>
 	
-		<select id="checkReply" parameterType="java.util.Map" resultType="java.lang.Integer">
+	<select id="getReplyTotal" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM reply
+		WHERE STORENAME = #{storename}
+	</select>
+	
+		<select id="checkReply" parameterType="java.util.List" resultType="java.lang.Integer">
 		SELECT R.REPLY
 		FROM (SELECT STORENAME,ID,REF,PNUM,CONTENTS,REPLY FROM REPLY WHERE STORENAME=#{storename} AND PNUM=#{pnum})R
 		WHERE id=#{id}

@@ -3,7 +3,8 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
-  
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -40,13 +41,13 @@ legend{display:none}
 </script>
 </head>
 <body>
-	<%
+<%-- 	<%
 		String title=request.getParameter("title");
 		MasterAskDao mdao=new MasterAskDao();
 		MasteraskadminBean mbean =null;
 		mbean = mdao.selQuestionOne(title);
 		System.out.print(mbean);
-	%>
+	%> --%>
 	<!-- UI Object -->
 	<h1>문의 하기</h1>
 <table cellspacing="0" border="1" summary="글 내용을 표시" class="tbl_type">
@@ -58,19 +59,19 @@ legend{display:none}
 <thead>
 <tr>
 <th scope="row">제목</th>
-<td colspan="5"><%=mbean.getTitle() %></td>
+<td colspan="5">${bean.title }</td>
 </tr>
 </thead>
 <tbody>
 <tr>
 <th scope="row">작성자</th>
-<td><%=mbean.getMasterid() %></td>
+<td>${bean.masterid }</td>
 <th scope="row">작성일</th>
-<td><%=mbean.getRegdate() %></td>
+<td>${bean.regdate }</td>
 </tr>
 <tr>
 <td colspan="6" class="cont" style="padding-bottom: 150px;">
-	<%=mbean.getMasterinfo() %>
+	${bean.masterinfo }
 </td>
 </tr>
 </tbody>
@@ -82,8 +83,8 @@ legend{display:none}
 	</colgroup>
 	<tbody>
 	<tr scope="row" class="input_txt">
-	<th><%=mbean.getAdminid() %></th>
-	<td><%=mbean.getAdmininfo() %></td>
+	<th>admin</th>
+	<td>${bean.admininfo }</td>
 	</tr>
 	</tbody>
 	</table>

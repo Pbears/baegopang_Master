@@ -6,6 +6,8 @@
 <%@page import="java.util.HashMap"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -89,14 +91,14 @@ textarea {
 	function insertBtn(i){
 		var contents = document.getElementById("contents"+i);
 		var pnum = document.getElementById("pnum"+i);
-	
-		document.location="insert/insertReply.jsp?contents="+contents.value+"&pnum="+pnum.value;
+
+		document.location="insertReply.do?contents="+contents+"&pnum="+pnum;
 	}
 	
 </script>
 </head>
 <body>
-	<%
+	<%-- <%
 		MasterBean mbean = (MasterBean) session.getAttribute("master");
 		String id = mbean.getId();
 		String storename = mbean.getStorename();
@@ -131,7 +133,7 @@ textarea {
 			endPage = totalPage;
 		map.put("start", start);
 		map.put("end", end);
-	%>
+	%> --%>
 	<jsp:include page="header.jsp"></jsp:include>
 	<div>
 		<div id="wrapper">
@@ -153,7 +155,7 @@ textarea {
 										</tr>
 									</thead>
 									<tbody>
-										<%
+										<%-- <%
 											HashMap<String, Object> ckmap = new HashMap<String, Object>();
 											MasterReplyBean replybean = null;
 											list = dao.selectReply(map);
@@ -165,37 +167,51 @@ textarea {
 												MasterReplyBean bean = list.get(i);
 												//	System.out.print(bean);
 												ckmap.put("pnum", bean.getPnum());
-										%>
-										<tr class="QeustionTr" id="replyCheck<%=bean.getNo()%>">
-											<td><%=bean.getRM()%></td>
-											<td><%=bean.getId()%></td>
-											<td><%=bean.getContents()%></td>
-											<td><%=bean.getRegDate()%></td>
-											<td id=""><%=(dao.checkReply(ckmap) == -1) ? "댓글 달기" : "댓글 완료"%></td>
+										%> --%>
+									<c:forEach var="i" items="${replylist}" varStatus="cnt">
+										<tr class="QeustionTr" id="replyCheck${i.no }">
+											<td>${i.RM }</td>
+											<td>${i.id }</td>
+											<td>${i.contents }</td>
+											<td>${i.regDate }</td>
+											<%-- <td id=""><%=(dao.checkReply(ckmap) == -1) ? "댓글 달기" : "댓글 완료"%></td> --%>
+											<c:choose>
+												<c:when test="${i.pnum eq -q}">
+													<td>댓글 달기</td>
+												</c:when>
+												<c:otherwise>
+													<td>댓글 완료</td>
+												</c:otherwise>
+											</c:choose>
 											<input type="hidden" name="replyList"
-												id="replyCheck<%=bean.getNo()%>"
-												value=<%=dao.checkReply(ckmap)%> />
-											<input type="hidden" id="pnum<%=i%>"
-												value="<%=bean.getPnum()%>" />
+												id="replyCheck${i.no}"
+												value="${i.pnum }" />
+											<input type="hidden" id="pnum${cnt.count }"
+												value="${i.pnum }" />
 										</tr>
 										<tr class="completeTr">
-											<td colspan="4"><textarea rows="3" id="contents<%=i%>"></textarea></td>
+											<td colspan="4"><textarea rows="3" id="contents${cnt.count }"></textarea></td>
 											<td colspan="1">
 												<button type="button" id="insertReply"
-													class="btn btn-sm btn-primary" onclick="insertBtn(<%=i%>)">
+													class="btn btn-sm btn-primary" onclick="insertBtn(${cnt.count})">
 													답변하기</button>
 											</td>
 										</tr>
-										<%
+										<form>
+											<input type="hidden" name="contents">
+											<input type="hidden" name="pnum">
+										</form>
+									<%-- 	<%
 											omap.put("pnum", bean.getPnum());
 												omap.put("id", mbean.getId());
-										%>
+										%> --%>
 										<tr class="answerTr">
-											<td colspan="5"><%=dao.selectOneRep(omap)%></td>
+										<td colspan="5">${sbean }</td>
 										</tr>
-										<%
+										<%-- <%
 											}
-										%>
+										%> --%>
+										</c:forEach>
 									</tbody>
 								</table>
 							</div>
@@ -205,7 +221,7 @@ textarea {
 
 				</div>
 				<!-- /#page-wrapper -->
-				<!-- 페이지이동페이징 -->
+			<%-- 	<!-- 페이지이동페이징 -->
 				<div class="paging" style="text-align: center;">
 					<ul class="pagination">
 						<ul class="pager">
@@ -277,7 +293,7 @@ textarea {
 						</ul>
 				</div>
 			</div>
-		</div>
+		</div> --%>
 		<!-- /#wrapper -->
 		<jsp:include page="footer.jsp"></jsp:include>
 </body>

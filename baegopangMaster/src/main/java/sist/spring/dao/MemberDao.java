@@ -13,7 +13,6 @@ public class MemberDao extends SqlSessionDaoSupport{
 	private SqlSessionFactoryBean sqlSessionFactory;
 
 	public MasterBean memberCheck(String id) {
-		System.out.println(id);
 		return this.getSqlSession().selectOne("memberCheck");
 	}
 

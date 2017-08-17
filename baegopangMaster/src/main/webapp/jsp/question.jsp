@@ -6,18 +6,20 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-<link href="/BaegopangMaster/css/question.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="../css/style.css" />
+<link href="css/question.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 <script type="text/javascript" src="js/modernizr.custom.29473.js"></script>
 <script type="text/javascript">
 	function noticeCk(i){
 		var obj=document.getElementById("noticeSel"+i).value;
-		window.open("selectQuestion.jsp?title="+obj,"noticeCk","width=700, height=450")
+		window.open("selectQuestion.do?title="+obj,"noticeCk","width=700, height=450")
 	}
 </script>
 <style type="text/css">
@@ -27,7 +29,7 @@
 </style>
 </head>
 <body>
-	<%
+<%-- 	<%
 		MasterBean mbean= (MasterBean)session.getAttribute("master");
 		String masterid = mbean.getId();
 		MasterAskDao dao = new MasterAskDao();
@@ -60,13 +62,13 @@
 		map.put("start", start);
 		map.put("end", end);
 		
-	%>
+	%> --%>
 	<jsp:include page="header.jsp"></jsp:include>
 	<div class="mid_src">
 		<div id="data_table">
 			<h1>일대일 문의</h1>
 			<a href="#"
-				onclick="window.open('insertQuestion.jsp', '_blank', 'width=400 height=500')">글
+				onclick="window.open('insertQuestion.do', '_blank', 'width=400 height=500')">글
 				쓰기 </a>
 			<div class="container">
 				<table class="table table-hover">
@@ -84,101 +86,166 @@
 						</tr>
 					</thead>
 					<tbody>
+						<%-- 
 						<%
 							list = dao.selectAsk(map);
 							for (int i = 0; i < list.size(); i++) {
 								MasteraskadminBean bean = list.get(i);
-						%>
+						%> 
+						--%>
+						<c:forEach var="i" items="${list }" varStatus="cnt">
 						<tr tabindex="1" style="text-align: center;">
-							<td><%=bean.getNo()%></td>
-							<td id="noticel<%=i %>" onclick="noticeCk(<%=i%>)"><%=bean.getTitle()%>
-								<input type="hidden" id="noticeSel<%=i %>" value="<%=bean.getTitle()%>">
+							<td>${i.no }</td>
+							<td id="noticel${cnt.count }" onclick="noticeCk(${cnt.count})">${i.title }
+								<input type="hidden" id="noticeSel${cnt.count }" value="${i.title }">
 							</td>
-							<td><%=bean.getRegdate()%></td>
+							<td>${i.regdate }</td>
 						</tr>
-						<%
-							}
-						%>
+						</c:forEach>
 					</tbody>
 				</table>
 			</div>
-			<!-- 페이지이동페이징 -->
+			
+	<!-- 페이지이동페이징 -->
 			<div class="paging" style="text-align: center;">
 				<ul class="pagination">
 					<ul class="pager">
-						<li><a href="/BaegopangMaster/jsp/question.jsp?page=1"
+						<li><a href="question.do?page=1"
 							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 						</a></li>
 						<li>
 						<li>
-							<%
+							<%-- <%
 								if (currentBlock > 1) {
 									if (currentPage != startPage) {
-							%> <a
-							href="/BaegopangMaster/jsp/question.jsp?page=<%=startPage - 1%>">
+							%> --%>
+							<c:choose>
+								<c:when test="${currentBlock > 1 }">
+									<c:choose>
+										<c:when test="${currentPage != startPage }">
+							 <a
+							href="question.do?page=${startPage - 1 }">
 								Previous </a> 
-								<%
+								<%-- <%
 								 	} else {
-								 %> <a href="#">Previous</a> <%
+								 %>  --%>
+								 </c:when>
+								 <c:otherwise>
+									 <a href="#">Previous</a> 
+								 </c:otherwise>
+								</c:choose> 
+								 <%-- <%
 								 	}
 								 	} else {
 								 		if (currentPage != startPage) {
-								 %> <a
-							href="/BaegopangMaster/jsp/question.jsp?page=<%=currentPage - 1%>">
-								Previous </a> <%
+								 %> --%> 
+								 </c:when>
+								
+								 <c:otherwise>
+								  <c:choose>
+								 <c:when test="${currentPage != startPage }">
+								 <a
+							href="question.do?page=${currentPage - 1 }">
+								Previous </a> <%-- <%
  	} else {
- %> <a href="#">Previous</a> <%
+ %>  --%>
+ 	</c:when>
+ 	<c:otherwise>
+ 	<a href="#">Previous</a> <%-- <%
  	}
  	}
- %>
+ %> --%>
+ </c:otherwise>
+ </c:choose>
+ </c:otherwise>
+ </c:choose>
 						</li>
-						<span> <%
+						<span>
+<%--  <%
 
 
  	for (int i = startPage; i <= endPage; i++) {
  		if (i == currentPage) {
- %>
-							<li><a href="#"><strong><%=i%></strong></a></li> <%
+ %>  --%>
+	<c:forEach var="i" begin="${startPage}" end="${endPage }"> 
+		<c:choose>
+			<c:when test="${i == currentPage }">
+
+		<li><a href="#"><strong>${i }</strong></a></li> 
+<%-- <%
  	} else {
- %>
+ %> --%>
+</c:when>
+<c:otherwise>
+
 							<li><a
-								href="/BaegopangMaster/jsp/question.jsp?page=<%=i%>">
-									<%=i%>
-							</a></li> <%
- 	}
+								href="question.do?page=${i }">
+									${i }
+							</a></li> 
+<%-- <%
+ 		}
  	}
  %>
+ --%> 
+ 	</c:otherwise>	
+ 	</c:choose>
+  </c:forEach>
 						</span>
 						<li>
-							<%
+							<%-- <%
 								if (totalPage > endPage) {
 									if (currentPage != endPage) {
-							%> <a
-							href="/BaegopangMaster/jsp/question.jsp?page=<%=currentPage + 1%>">
-								Next </a> <%
+							%> --%>
+							<c:choose>
+								<c:when test="${totalPage > endPage }">
+									<c:choose>
+										<c:when test="${currentPage != endPage }">
+							 <a href="question.do?page=${currentPage + 1 }">
+								Next </a> 
+<%-- <%
  	} else {
- %> <a href="#">Next</a> <%
+ %>  --%>
+  </c:when>
+  <c:otherwise>
+ <a href="#">Next</a>
+ </c:otherwise>
+<%--   <%
  	}
  	} else {
  		if (currentPage != endPage) {
- %> <a
-							href="/BaegopangMaster/jsp/question.jsp?page=<%=currentPage + 1%>">
-								Next </a> <%
+ %>  --%>
+ </c:choose>
+ </c:when>
+ <c:otherwise>
+	<c:choose>
+		<c:when test="${currentPage != endPage }">
+	
+	
+ <a href="question.do?page=${currentPage + 1 }">Next </a>
+ </c:when>
+ <c:otherwise> 
+<%-- <%
  	} else {
- %> <a href="#">Next</a> <%
+ %> --%>
+ 	 <a href="#">Next</a>
+ </c:otherwise>
+ </c:choose>
+<%--  <%
  	}
  	}
- %>
+ %> --%>
+ </c:otherwise>
+  </c:choose>
+
 						</li>
 
 						<li><a
-							href="/BaegopangMaster/jsp/question.jsp?page=<%=totalPage%>"
-							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+							href="question.do?page=${totalPage }"
+							aria-label="Next"> <span aria-hidden="true">&raquo;</span> 
 						</a></li>
 					</ul>
 			</div>
-
-		</div>
+		</div> 
 		<div class="container">
 			<h1>FAQ</h1>
 			<section class="ac-container">

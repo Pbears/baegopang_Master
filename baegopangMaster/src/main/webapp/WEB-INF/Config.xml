@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 			<typeAlias type="sist.spring.bean.DaySalesDataBean" alias="daysales"/>
 			<typeAlias type="sist.spring.bean.WeekdaySalesDataBean" alias="weekdaysales"/>
 			<typeAlias type="sist.spring.bean.MonthSalesDataBean" alias="monthsales"/>
+			<typeAlias type="sist.spring.bean.ReplyTotalBean" alias="replytotal"/>
 		
 	</typeAliases>
 	<mappers>

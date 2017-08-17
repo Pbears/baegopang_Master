@@ -10,7 +10,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<%
+<%-- 	<%
 		MasterBean mbean = (MasterBean) session.getAttribute("master");
 		String storename = mbean.getStorename();
 		String id=mbean.getId();
@@ -27,6 +27,6 @@
 		dao.getPoint(id);
 		
 		response.sendRedirect("../ReplyManage.jsp");
-	%>
+	%> --%>
 </body>
 </html>

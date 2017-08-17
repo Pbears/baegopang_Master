@@ -84,7 +84,16 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 			return -1;
 		} 
 	}
-
+	public int getReplyTotal(String storename) {
+		SqlSession sqlSession = null;
+		try {
+			sqlSession = this.getSqlSession();
+			return sqlSession.selectOne("getReplyTotal", storename);
+		} catch (Exception e) {
+			/* e.printStackTrace(); */
+			return -1;
+		} 
+	}
 	public void updateReply(HashMap<String, Object> map) throws Exception {
 		SqlSession sqlSession = this.getSqlSession();
 		try {
