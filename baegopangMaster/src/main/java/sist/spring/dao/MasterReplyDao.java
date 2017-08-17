@@ -63,11 +63,11 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 		} 
 	}
 
-	public int getRTotalRows(String storename) throws Exception {
+	public int getRTotalRows(HashMap<String, Object>map) throws Exception {
 		SqlSession sqlSession = null;
 		try {
 			sqlSession = this.getSqlSession();
-			return sqlSession.selectOne("getRTotalRows", storename);
+			return sqlSession.selectOne("getRTotalRows", map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
@@ -114,10 +114,10 @@ public class MasterReplyDao extends SqlSessionDaoSupport{
 		} 
 	}
 
-	public String selectOneRep(HashMap<String, Object> map) throws Exception {
+	public List<MasterReplyBean> selectOneRep(String id) throws Exception {
 		SqlSession sqlSession = this.getSqlSession();
 		try {
-			return sqlSession.selectOne("selectOneRep", map);
+			return sqlSession.selectList("selectOneRep", id);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

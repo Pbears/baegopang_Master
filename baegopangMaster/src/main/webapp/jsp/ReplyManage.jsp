@@ -78,7 +78,7 @@ textarea {
 			var trId = $(this).attr('id');
 			var inputv = $('input[id="' + trId + '"]').attr('value');
 				
-				if(inputv==-1){
+				if(inputv==0){
 					$(this).next().toggle(500);
 				}else{
 					$(this).next().next().toggle(500);
@@ -91,8 +91,9 @@ textarea {
 	function insertBtn(i){
 		var contents = document.getElementById("contents"+i);
 		var pnum = document.getElementById("pnum"+i);
+		
 
-		document.location="insertReply.do?contents="+contents+"&pnum="+pnum;
+		document.location="insertReply.do?contents="+contents.value+"&pnum="+pnum.value;
 	}
 	
 </script>
@@ -176,16 +177,15 @@ textarea {
 											<td>${i.regDate }</td>
 											<%-- <td id=""><%=(dao.checkReply(ckmap) == -1) ? "댓글 달기" : "댓글 완료"%></td> --%>
 											<c:choose>
-												<c:when test="${i.pnum eq -q}">
-													<td>댓글 달기</td>
+												<c:when test="${i.reply eq 0}">
+													<td>답글 미작성</td>
 												</c:when>
 												<c:otherwise>
-													<td>댓글 완료</td>
+													<td>답글 완료</td>
 												</c:otherwise>
 											</c:choose>
-											<input type="hidden" name="replyList"
-												id="replyCheck${i.no}"
-												value="${i.pnum }" />
+											<input type="hidden" name="replyList" id="replyCheck${i.no}"
+												value="${i.reply }" />
 											<input type="hidden" id="pnum${cnt.count }"
 												value="${i.pnum }" />
 										</tr>
@@ -197,16 +197,16 @@ textarea {
 													답변하기</button>
 											</td>
 										</tr>
-										<form>
-											<input type="hidden" name="contents">
-											<input type="hidden" name="pnum">
-										</form>
 									<%-- 	<%
 											omap.put("pnum", bean.getPnum());
 												omap.put("id", mbean.getId());
 										%> --%>
 										<tr class="answerTr">
-										<td colspan="5">${sbean }</td>
+											<c:forEach var="j" items="${masterlist}" varStatus="cnt">
+												<c:if test="${j.pnum eq i.pnum }">
+												<td colspan="5">${j.contents }</td>
+												</c:if>
+											</c:forEach>
 										</tr>
 										<%-- <%
 											}
@@ -221,79 +221,146 @@ textarea {
 
 				</div>
 				<!-- /#page-wrapper -->
-			<%-- 	<!-- 페이지이동페이징 -->
-				<div class="paging" style="text-align: center;">
-					<ul class="pagination">
-						<ul class="pager">
-							<li><a href="/BaegopangMaster/jsp/ReplyManage.jsp?page=1"
-								aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-							</a></li>
-							<li>
-							<li>
-								<%
-									if (currentBlock > 1) {
-										if (currentPage != startPage) {
-								%> <a
-								href="/BaegopangMaster/jsp/ReplyManage.jsp?page=<%=startPage - 1%>">
-									Previous </a> <%
+		<!-- 페이지이동페이징 -->
+			<div class="paging" style="text-align: center;">
+				<ul class="pagination">
+					<ul class="pager">
+						<li><a href="/web/ReplyManage.do?page=1"
+							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+						</a></li>
+						<li>
+						<li>
+							<%-- <%
+								if (currentBlock > 1) {
+									if (currentPage != startPage) {
+							%> --%>
+							<c:choose>
+								<c:when test="${currentBlock > 1 }">
+									<c:choose>
+										<c:when test="${currentPage != startPage }">
+							 <a
+							href="/web/ReplyManage.do?page=${startPage - 1 }">
+								Previous </a> 
+								<%-- <%
+								 	} else {
+								 %>  --%>
+								 </c:when>
+								 <c:otherwise>
+									 <a href="#">Previous</a> 
+								 </c:otherwise>
+								</c:choose> 
+								 <%-- <%
+								 	}
+								 	} else {
+								 		if (currentPage != startPage) {
+								 %> --%> 
+								 </c:when>
+								
+								 <c:otherwise>
+								  <c:choose>
+								 <c:when test="${currentPage != startPage }">
+								 <a
+							href="/web/ReplyManage.do?page=${currentPage - 1 }">
+								Previous </a> <%-- <%
  	} else {
- %> <a href="#">Previous</a> <%
- 	}
- 	} else {
- 		if (currentPage != startPage) {
- %> <a
-								href="/BaegopangMaster/jsp/ReplyManage.jsp?page=<%=currentPage - 1%>">
-									Previous </a> <%
- 	} else {
- %> <a href="#">Previous</a> <%
+ %>  --%>
+ 	</c:when>
+ 	<c:otherwise>
+ 	<a href="#">Previous</a> <%-- <%
  	}
  	}
- %>
-							</li>
-							<span> <%
+ %> --%>
+ </c:otherwise>
+ </c:choose>
+ </c:otherwise>
+ </c:choose>
+						</li>
+						<span>
+<%--  <%
+
+
  	for (int i = startPage; i <= endPage; i++) {
  		if (i == currentPage) {
- %>
-								<li><a href="#"><strong><%=i%></strong></a></li> <%
+ %>  --%>
+	<c:forEach var="i" begin="${startPage}" end="${endPage }"> 
+		<c:choose>
+			<c:when test="${i == currentPage }">
+
+		<li><a href="#"><strong>${i }</strong></a></li> 
+<%-- <%
  	} else {
- %>
-								<li><a
-									href="/BaegopangMaster/jsp/ReplyManage.jsp?page=<%=i%>"> <%=i%>
-								</a></li> <%
+ %> --%>
+</c:when>
+<c:otherwise>
+
+							<li><a
+								href="/web/ReplyManage.do?page=${i }">
+									${i }
+							</a></li> 
+<%-- <%
+ 		}
  	}
- 	}
  %>
-							</span>
-							<li>
-								<%
-									if (totalPage > endPage) {
-										if (currentPage != endPage) {
-								%> <a
-								href="/BaegopangMaster/jsp/ReplyManage.jsp?page=<%=currentPage + 1%>">
-									Next </a> <%
+ --%> 
+ 	</c:otherwise>	
+ 	</c:choose>
+  </c:forEach>
+						</span>
+						<li>
+							<%-- <%
+								if (totalPage > endPage) {
+									if (currentPage != endPage) {
+							%> --%>
+							<c:choose>
+								<c:when test="${totalPage > endPage }">
+									<c:choose>
+										<c:when test="${currentPage != endPage }">
+							 <a href="/web/ReplyManage.do?page=${currentPage + 1 }">
+								Next </a> 
+<%-- <%
  	} else {
- %> <a href="#">Next</a> <%
+ %>  --%>
+  </c:when>
+  <c:otherwise>
+ <a href="#">Next</a>
+ </c:otherwise>
+<%--   <%
  	}
  	} else {
  		if (currentPage != endPage) {
- %> <a
-								href="/BaegopangMaster/jsp/ReplyManage.jsp?page=<%=currentPage + 1%>">
-									Next </a> <%
+ %>  --%>
+ </c:choose>
+ </c:when>
+ <c:otherwise>
+	<c:choose>
+		<c:when test="${currentPage != endPage }">
+	
+	
+ <a href="/web/ReplyManage.do?page=${currentPage + 1 }">Next </a>
+ </c:when>
+ <c:otherwise> 
+<%-- <%
  	} else {
- %> <a href="#">Next</a> <%
+ %> --%>
+ 	 <a href="#">Next</a>
+ </c:otherwise>
+ </c:choose>
+<%--  <%
  	}
  	}
- %>
-							</li>
+ %> --%>
+ </c:otherwise>
+  </c:choose>
 
-							<li><a
-								href="/BaegopangMaster/jsp/ReplyManage.jsp?page=<%=totalPage%>"
-								aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-							</a></li>
-						</ul>
-				</div>
+						</li>
+
+						<li><a
+							href="/web/ReplyManage.do?page=${totalPage }"
+							aria-label="Next"> <span aria-hidden="true">&raquo;</span> 
+						</a></li>
+					</ul>
 			</div>
-		</div> --%>
+
 		<!-- /#wrapper -->
 		<jsp:include page="footer.jsp"></jsp:include>
 </body>

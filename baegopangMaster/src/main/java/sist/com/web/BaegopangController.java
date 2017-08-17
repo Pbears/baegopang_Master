@@ -74,7 +74,7 @@ public class BaegopangController {
 	@RequestMapping(value = "login.do")
 	public String login(Model model, @RequestParam(name = "userId", required = false) String userId,
 			@RequestParam(name = "userPw", required = false) String userPw) {
-		System.out.println(userId);
+
 		MasterBean bean = member.memberCheck(userId);
 		if (userPw.equals(bean.getPw())) {
 			model.addAttribute("master", bean);
@@ -297,18 +297,18 @@ public class BaegopangController {
 		return "jsp/masterOrder";
 	}
 	@RequestMapping(value="ReplyManage.do")
-	public String ReplyManage(Model model,HttpSession session,@RequestParam(value = "page", required = false) String page)throws Exception{
+	public String ReplyManage(Model model,HttpSession session,@RequestParam(value = "page", required = false)String page)throws Exception{
 		MasterBean master=(MasterBean)session.getAttribute("master");
  
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		HashMap<String, Object> ckmap = new HashMap<String, Object>();
 		map.put("storename", master.getStorename());
 		map.put("id", master.getId());
-		
 		int pageScale = 6;
 
 		int currentPage = 0;
-		int totalRow = reply.getRTotalRows(master.getStorename());
+		int totalRow = reply.getRTotalRows(map);
+	
 		try {
 			currentPage = Integer.parseInt(page);
 		} catch (Exception e) {
@@ -330,26 +330,35 @@ public class BaegopangController {
 		map.put("end", end);
 		
 		List<MasterReplyBean>list = reply.selectReply(map);
-		System.out.println(list);
-		ReplyTotalBean replytotal = null;
+
 		MasterReplyBean bean = null;
 		for (int i = 0; i < list.size(); i++) {
 			 bean = list.get(i);
 		}
-	/*	ckmap.put("storename", master.getStorename());
+/*		ckmap.put("storename", master.getStorename());
 		ckmap.put("id", master.getId());
-		ckmap.put("pnum", bean.getPnum());
-		int ck=reply.checkReply(ckmap);
-		*/
+		ckmap.put("pnum", bean.getPnum());*/
+		//int ck=reply.checkReply(ckmap);
+		
 		HashMap<String, Object> omap = new HashMap<String, Object>();
-		omap.put("pnum", bean.getPnum());
+
+	//	omap.put("pnum", bean.getPnum());
 		omap.put("id", master.getId());
-		String sbean= reply.selectOneRep(omap);
+		
+		MasterReplyBean sbean=null;
+		List<MasterReplyBean>masterlist=null;
+		masterlist= reply.selectOneRep(master.getId());			
+
 		
 		session.setAttribute("sbean", bean);
 		model.addAttribute("replylist", list);
-	//	model.addAttribute("ck", ck);
+		model.addAttribute("masterlist", masterlist);
 		model.addAttribute("sbean", sbean);
+		model.addAttribute("currentBlock", currentBlock);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("totalPage", totalPage);
 		return "jsp/ReplyManage";
 	}
 
@@ -367,7 +376,7 @@ public class BaegopangController {
 		reply.insertReply(map);
 		reply.updateReply(map);
 		reply.getPoint(id);
-		return "web/ReplyManage.do";
+		return "redirect:ReplyManage.do?page=1";
 	}
 	@RequestMapping(value="Point.do")
 	public String Point() {
@@ -444,7 +453,7 @@ public class BaegopangController {
 	public String insertAsk(Model model,HttpSession session,@RequestParam(value="title" , required = false)String title,@RequestParam(value="contents" ,required = false)String contents) {
 		MasterBean master=(MasterBean)session.getAttribute("master");
 		MasteraskadminBean bean = new MasteraskadminBean();
-		System.out.println(title);
+
 		bean.setTitle(title);
 		bean.setMasterinfo(contents);
 		bean.setMasterid(master.getId());

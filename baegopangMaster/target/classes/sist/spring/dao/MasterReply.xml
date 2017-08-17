@@ -12,15 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE RM BETWEEN #{start} AND #{end}
   	</select>
   	
-	<select id="getRTotalRows" parameterType="java.lang.String" resultType="java.lang.Integer">
+	<select id="getRTotalRows" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM reply
-		WHERE STORENAME = #{storename} AND id != #{id}
+		WHERE STORENAME = #{storename}AND id !=#{id}
 	</select>
 	
-	<select id="getReplyTotal" parameterType="java.lang.String" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM reply
-		WHERE STORENAME = #{storename}
-	</select>
 	
 		<select id="checkReply" parameterType="java.util.List" resultType="java.lang.Integer">
 		SELECT R.REPLY
@@ -41,9 +37,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE PNUM=#{pnum} AND ID!=#{id}
 	</update>
 	
-	<select id="selectOneRep" parameterType="java.util.HashMap" resultType="java.lang.String">
-		SELECT CONTENTS FROM REPLY
-		WHERE PNUM=#{pnum} AND id=#{id}
+	<select id="selectOneRep" parameterType="java.lang.String" resultType="reply">
+		SELECT CONTENTS,pnum FROM REPLY
+		WHERE id=#{id}
 	</select>
 	
 	<update id="getPoint" parameterType="java.lang.String">
